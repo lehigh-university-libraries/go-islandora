@@ -1,0 +1,23 @@
+package islandora
+
+import (
+  islandoraModel "github.com/lehigh-university-libraries/go-islandora/model" 
+)
+
+type {{.StructName}} struct {
+	Nid               []islandoraModel.IntField             `json:"nid"`
+	Vid               []islandoraModel.IntField             `json:"vid"`
+	Uuid              []islandoraModel.IntField             `json:"uuid"`
+	Language          []islandoraModel.Field                `json:"lang"`
+	RevisionTimestamp []islandoraModel.Field                `json:"revision_timestamp"`
+	RevisionUid       []islandoraModel.EntityReferenceField `json:"revision_uid"`
+	RevisionLog       []islandoraModel.Field                `json:"revision_log"`
+	Uid               []islandoraModel.EntityReferenceField `json:"uid"`
+	Title             []islandoraModel.Field                `json:"title"`
+	Type              []islandoraModel.Field                `json:"type"`
+	Status            []islandoraModel.BoolField            `json:"status"`
+	Created           []islandoraModel.Field                `json:"created"`
+	Changed           []islandoraModel.Field                `json:"changed"`
+
+{{range .Fields}}    {{.Name}} {{.Type}} `json:"{{.Tag}},omitempty"`
+{{end}}}
