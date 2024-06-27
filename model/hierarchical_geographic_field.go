@@ -39,7 +39,7 @@ func (field *HierarchicalGeographicField) UnmarshalCSV(csv string) error {
 	s := make([]HierarchicalGeographic, len(values))
 	for i, value := range values {
 		var f HierarchicalGeographic
-		err := json.Unmarshal([]byte(value), f)
+		err := json.Unmarshal([]byte(value), &f)
 		if err != nil {
 			return err
 		}

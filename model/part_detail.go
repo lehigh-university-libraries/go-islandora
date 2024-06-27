@@ -37,7 +37,7 @@ func (field *PartDetailField) UnmarshalCSV(csv string) error {
 	s := make([]PartDetail, len(values))
 	for i, value := range values {
 		var f PartDetail
-		err := json.Unmarshal([]byte(value), f)
+		err := json.Unmarshal([]byte(value), &f)
 		if err != nil {
 			return err
 		}

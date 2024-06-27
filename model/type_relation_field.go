@@ -36,7 +36,7 @@ func (field *TypedRelationField) UnmarshalCSV(csv string) error {
 	s := make([]TypedRelation, len(values))
 	for i, value := range values {
 		var f TypedRelation
-		err := json.Unmarshal([]byte(value), f)
+		err := json.Unmarshal([]byte(value), &f)
 		if err != nil {
 			return err
 		}

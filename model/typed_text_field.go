@@ -37,7 +37,7 @@ func (field *TypedTextField) UnmarshalCSV(csv string) error {
 	s := make([]TypedText, len(values))
 	for i, value := range values {
 		var f TypedText
-		err := json.Unmarshal([]byte(value), f)
+		err := json.Unmarshal([]byte(value), &f)
 		if err != nil {
 			return err
 		}

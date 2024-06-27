@@ -36,7 +36,7 @@ func (field *RelatedItemField) UnmarshalCSV(csv string) error {
 	s := make([]RelatedItem, len(values))
 	for i, value := range values {
 		var f RelatedItem
-		err := json.Unmarshal([]byte(value), f)
+		err := json.Unmarshal([]byte(value), &f)
 		if err != nil {
 			return err
 		}
