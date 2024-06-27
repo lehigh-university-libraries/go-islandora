@@ -96,7 +96,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	slog.Info("Structs generated and written to %s", *output)
+	slog.Info("Structs generated and written", "file", *output)
 }
 
 func generateGoStruct(data StructData) (string, error) {
@@ -115,7 +115,6 @@ func generateGoStruct(data StructData) (string, error) {
 }
 
 func mapFieldTypeToGoType(fieldType string) string {
-	slog.Info(fieldType)
 	switch fieldType {
 	case "boolean":
 		return "[]islandoraModel.BoolField"
