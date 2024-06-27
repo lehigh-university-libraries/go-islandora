@@ -3,7 +3,7 @@
 set -eou pipefail
 
 if [ ! -d ./islandora-starter-site ]; then
-  git clone git@github.com:Islandora-Devops/islandora-starter-site
+  git clone https://github.com/Islandora-Devops/islandora-starter-site
 fi
 
 go run main.go \
