@@ -1,0 +1,229 @@
+{
+  "nid": [
+    {
+      "value": 19
+    }
+  ],
+  "uuid": [
+    {
+      "value": "63c8ca1b-807f-4774-b9c6-a0d715b31452"
+    }
+  ],
+  "vid": [
+    {
+      "value": 19
+    }
+  ],
+  "langcode": [
+    {
+      "value": "en"
+    }
+  ],
+  "type": [
+    {
+      "target_id": "islandora_object",
+      "target_type": "node_type",
+      "target_uuid": "6399fba1-f0d8-4c8a-8162-9c8dd4d357ff"
+    }
+  ],
+  "revision_timestamp": [
+    {
+      "value": "2024-06-27T04:05:47+00:00",
+      "format": "Y-m-d\\TH:i:sP"
+    }
+  ],
+  "revision_uid": [
+    {
+      "target_id": 1,
+      "target_type": "user",
+      "target_uuid": "8e835283-552b-498e-b50b-ca25844bb2e4",
+      "url": "/en/user/1"
+    }
+  ],
+  "status": [
+    {
+      "value": true
+    }
+  ],
+  "uid": [
+    {
+      "target_id": 1,
+      "target_type": "user",
+      "target_uuid": "8e835283-552b-498e-b50b-ca25844bb2e4",
+      "url": "/en/user/1"
+    }
+  ],
+  "title": [
+    {
+      "value": "Portrait of J. Crichton-Patterson"
+    }
+  ],
+  "created": [
+    {
+      "value": "2024-06-27T04:05:47+00:00",
+      "format": "Y-m-d\\TH:i:sP"
+    }
+  ],
+  "changed": [
+    {
+      "value": "2024-06-27T04:05:47+00:00",
+      "format": "Y-m-d\\TH:i:sP"
+    }
+  ],
+  "promote": [
+    {
+      "value": true
+    }
+  ],
+  "sticky": [
+    {
+      "value": false
+    }
+  ],
+  "default_langcode": [
+    {
+      "value": true
+    }
+  ],
+  "revision_translation_affected": [
+    {
+      "value": true
+    }
+  ],
+  "did_image": [
+    {
+      "target_id": 40,
+      "target_type": "media",
+      "target_uuid": "27dab811-9ab9-4ee0-b3ba-3c2137f97e1b",
+      "url": "/en/media/40/edit"
+    }
+  ],
+  "path": [
+    {
+      "alias": "/islandora/portrait-j-crichton-patterson",
+      "pid": 19,
+      "langcode": "en"
+    }
+  ],
+  "content_translation_source": [
+    {
+      "value": "und"
+    }
+  ],
+  "content_translation_outdated": [
+    {
+      "value": false
+    }
+  ],
+  "field_abstract": [],
+  "field_alt_title": [],
+  "field_classification": [],
+  "field_coordinates": [],
+  "field_coordinates_text": [],
+  "field_copyright_date": [],
+  "field_date_captured": [],
+  "field_date_modified": [],
+  "field_date_valid": [],
+  "field_description": [
+    {
+      "value": "Portrait of J. Crichton-Patterson holding a computer and a stack of books."
+    }
+  ],
+  "field_dewey_classification": [],
+  "field_edition": [],
+  "field_edtf_date": [],
+  "field_edtf_date_created": [],
+  "field_edtf_date_issued": [
+    {
+      "value": "1999"
+    }
+  ],
+  "field_extent": [],
+  "field_frequency": [],
+  "field_full_title": [],
+  "field_genre": [],
+  "field_geographic_subject": [],
+  "field_identifier": [
+    {
+      "value": "61220/utsc10311"
+    }
+  ],
+  "field_isbn": [],
+  "field_language": [],
+  "field_lcc_classification": [],
+  "field_linked_agent": [
+    {
+      "target_id": 906,
+      "rel_type": "relators:pht",
+      "target_type": "taxonomy_term",
+      "target_uuid": "a67ca000-8302-4db0-9f5a-4a15565532b9",
+      "url": "/en/taxonomy/term/906"
+    }
+  ],
+  "field_local_identifier": [],
+  "field_member_of": [
+    {
+      "target_id": 4,
+      "target_type": "node",
+      "target_uuid": "d88c503b-4ec0-4519-9aa9-147e5f593bfc",
+      "url": "/en/islandora/large-image-collection"
+    }
+  ],
+  "field_model": [
+    {
+      "target_id": 894,
+      "target_type": "taxonomy_term",
+      "target_uuid": "85746501-90fa-4428-b4ab-b1ed9b297a83",
+      "url": "/en/taxonomy/term/894"
+    }
+  ],
+  "field_mode_of_issuance": [],
+  "field_note": [],
+  "field_oclc_number": [],
+  "field_physical_form": [],
+  "field_pid": [],
+  "field_place_published": [],
+  "field_place_published_country": [],
+  "field_publisher": [
+    {
+      "value": "University of Toronto Scarborough"
+    }
+  ],
+  "field_representative_image": [],
+  "field_resource_type": [
+    {
+      "target_id": 15,
+      "target_type": "taxonomy_term",
+      "target_uuid": "8bc00ae2-fc7e-41ed-9183-cf16bbcd83a0",
+      "url": "/en/taxonomy/term/15"
+    }
+  ],
+  "field_rights": [
+    {
+      "value": "Digital files found in the UTSC Library's Digital Collections are meant for research and private study used in compliance with copyright legislation. Access to digital images and text found on this website and the technical capacity to download or copy it does not imply permission to re-use. Prior written permission to publish, or otherwise use images and text found on the website must be obtained from the copyright holder. Please contact UTSC Library for further information.",
+      "format": "full_html",
+      "processed": "Digital files found in the UTSC Library's Digital Collections are meant for research and private study used in compliance with copyright legislation. Access to digital images and text found on this website and the technical capacity to download or copy it does not imply permission to re-use. Prior written permission to publish, or otherwise use images and text found on the website must be obtained from the copyright holder. Please contact UTSC Library for further information."
+    }
+  ],
+  "field_subject": [],
+  "field_subjects_name": [],
+  "field_subject_general": [
+    {
+      "target_id": 907,
+      "target_type": "taxonomy_term",
+      "target_uuid": "8cd03197-a088-4049-adce-8cec393f7b46",
+      "url": "/en/taxonomy/term/907"
+    }
+  ],
+  "field_table_of_contents": [],
+  "field_temporal_subject": [],
+  "field_viewer_override": [
+    {
+      "target_id": 34,
+      "target_type": "taxonomy_term",
+      "target_uuid": "39c2637f-510e-4d64-bc43-fedf23372e83",
+      "url": "/en/taxonomy/term/34"
+    }
+  ],
+  "field_weight": []
+}

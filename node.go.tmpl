@@ -7,14 +7,14 @@ import (
 type {{.StructName}} struct {
 	Nid               []islandoraModel.IntField             `json:"nid"`
 	Vid               []islandoraModel.IntField             `json:"vid"`
-	Uuid              []islandoraModel.IntField             `json:"uuid"`
+	Uuid              []islandoraModel.GenericField         `json:"uuid"`
 	Language          []islandoraModel.GenericField         `json:"lang"`
 	RevisionTimestamp []islandoraModel.GenericField         `json:"revision_timestamp"`
 	RevisionUid       []islandoraModel.EntityReferenceField `json:"revision_uid"`
 	RevisionLog       []islandoraModel.GenericField         `json:"revision_log"`
 	Uid               []islandoraModel.EntityReferenceField `json:"uid"`
 	Title             []islandoraModel.GenericField         `json:"title"`
-	Type              []islandoraModel.GenericField         `json:"type"`
+	Type              []islandoraModel.ConfigReferenceField `json:"type"`
 	Status            []islandoraModel.BoolField            `json:"status"`
 	Created           []islandoraModel.GenericField         `json:"created"`
 	Changed           []islandoraModel.GenericField         `json:"changed"`

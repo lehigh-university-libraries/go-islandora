@@ -1,2 +1,4 @@
 go-islandora
 islandora-starter-site
+islandora/*
+!islandora/.keep

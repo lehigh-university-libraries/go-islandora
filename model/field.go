@@ -4,6 +4,12 @@ type BoolField struct {
 	Value bool `json:"value"`
 }
 
+type ConfigReferenceField struct {
+	TargetId   string `json:"target_id"`
+	TargetType string `json:"target_type"`
+	TargetUuid string `json:"target_uuid"`
+}
+
 type EdtfField struct {
 	Value string `json:"value"`
 }
