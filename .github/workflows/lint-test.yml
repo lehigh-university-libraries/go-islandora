@@ -9,7 +9,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: check valid sh
+        run: shellcheck tests/*.sh
+
       - uses: actions/setup-go@v4
+
+      - name: Generate structs
+        run: ./tests/starter-site.sh
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
@@ -22,5 +28,5 @@ jobs:
       - name: Build
         run: go build -v ./...
 
-      - name: Test with the Go CLI
+      - name: Run tests
         run: go test -v ./...
