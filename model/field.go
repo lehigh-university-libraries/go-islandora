@@ -26,8 +26,9 @@ type EntityReferenceField struct {
 }
 
 type GenericField struct {
-	Format string `json:"format,omitempty"`
-	Value  string `json:"value"`
+	Format    string `json:"format,omitempty"`
+	Processed string `json:"processed,omitempty"`
+	Value     string `json:"value"`
 }
 
 type GeoLocationField struct {
