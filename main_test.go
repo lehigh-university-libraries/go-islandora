@@ -8,6 +8,7 @@ import (
 
 	"github.com/lehigh-university-libraries/go-islandora/islandora"
 
+	"github.com/gocarina/gocsv"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -24,6 +25,21 @@ func SaveJSON(filename string, v interface{}) error {
 	}
 
 	_, err = file.Write(byteValue)
+	return err
+}
+
+func SaveCsv(filename string, o islandora.IslandoraObject) error {
+	f, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	row := []islandora.IslandoraObject{
+		o,
+	}
+	err = gocsv.MarshalFile(row, f)
+
 	return err
 }
 
@@ -70,6 +86,20 @@ func TestSaveJson(t *testing.T) {
 	err = SaveJSON("output.json", node)
 	if err != nil {
 		t.Fatalf("Failed to save JSON: %v", err)
+	}
+}
+
+func TestSaveCsv(t *testing.T) {
+	var node islandora.IslandoraObject
+
+	err := LoadJSON("fixtures/node.json", &node)
+	if err != nil {
+		t.Fatalf("Failed to load JSON: %v", err)
+	}
+
+	err = SaveCsv("fixtures/node.csv", node)
+	if err != nil {
+		t.Fatalf("Failed to save CSV: %v", err)
 	}
 
 }
