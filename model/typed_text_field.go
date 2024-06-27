@@ -2,28 +2,46 @@ package model
 
 import (
 	"encoding/json"
-	"fmt"
+	"log/slog"
+	"strings"
 )
 
-type TypedTextField struct {
+type TypedTextField []TypedText
+type TypedText struct {
 	Attr0  string `json:"attr0,omitempty"`
 	Attr1  string `json:"attr1,omitempty"`
 	Format string `json:"format,omitempty"`
 	Value  string `json:"value"`
 }
 
-func (field *TypedTextField) MarshalCSV() (string, error) {
+func (field *TypedText) String() string {
 	data, err := json.Marshal(field)
 	if err != nil {
-		return "", err
+		slog.Error("Unable to marshal PartDetail string", "err", err)
+		return ""
 	}
-	return string(data), nil
+
+	return string(data)
+}
+
+func (field TypedTextField) MarshalCSV() (string, error) {
+	values := make([]string, len(field))
+	for i, field := range field {
+		values[i] = field.String()
+	}
+	return strings.Join(values, "|"), nil
 }
 
 func (field *TypedTextField) UnmarshalCSV(csv string) error {
-	return json.Unmarshal([]byte(csv), field)
-}
-
-func (field *TypedTextField) String() string {
-	return fmt.Sprintf("%+v", *field)
+	values := strings.Split(csv, "|")
+	s := make([]TypedText, len(values))
+	for i, value := range values {
+		var f TypedText
+		err := json.Unmarshal([]byte(value), f)
+		if err != nil {
+			return err
+		}
+		s[i] = f
+	}
+	return nil
 }

@@ -2,26 +2,45 @@ package model
 
 import (
 	"encoding/json"
-	"fmt"
+	"log/slog"
+	"strings"
 )
 
-type TypedRelationField struct {
+type TypedRelationField []TypedRelation
+type TypedRelation struct {
 	TargetId int    `json:"target_id"`
 	RelType  string `json:"rel_type"`
 }
 
-func (field *TypedRelationField) MarshalCSV() (string, error) {
+func (field *TypedRelation) String() string {
+	// TODO: rel:bundle:name
 	data, err := json.Marshal(field)
 	if err != nil {
-		return "", err
+		slog.Error("Unable to marshal PartDetail string", "err", err)
+		return ""
 	}
-	return string(data), nil
+
+	return string(data)
+}
+
+func (field TypedRelationField) MarshalCSV() (string, error) {
+	values := make([]string, len(field))
+	for i, field := range field {
+		values[i] = field.String()
+	}
+	return strings.Join(values, "|"), nil
 }
 
 func (field *TypedRelationField) UnmarshalCSV(csv string) error {
-	return json.Unmarshal([]byte(csv), field)
-}
-
-func (field *TypedRelationField) String() string {
-	return fmt.Sprintf("%+v", *field)
+	values := strings.Split(csv, "|")
+	s := make([]TypedRelation, len(values))
+	for i, value := range values {
+		var f TypedRelation
+		err := json.Unmarshal([]byte(value), f)
+		if err != nil {
+			return err
+		}
+		s[i] = f
+	}
+	return nil
 }

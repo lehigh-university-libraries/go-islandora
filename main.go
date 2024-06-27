@@ -117,29 +117,29 @@ func generateGoStruct(data StructData) (string, error) {
 func mapFieldTypeToGoType(fieldType string) string {
 	switch fieldType {
 	case "boolean":
-		return "[]islandoraModel.BoolField"
+		return "islandoraModel.BoolField"
 	case "entity_reference":
-		return "[]islandoraModel.EntityReferenceField"
+		return "islandoraModel.EntityReferenceField"
 	case "edtf":
-		return "[]islandoraModel.EdtfField"
+		return "islandoraModel.EdtfField"
 	case "email":
-		return "[]islandoraModel.EmailField"
+		return "islandoraModel.EmailField"
 	case "integer":
-		return "[]islandoraModel.IntField"
+		return "islandoraModel.IntField"
 	case "geolocation":
-		return "[]islandoraModel.GeoLocationField"
+		return "islandoraModel.GeoLocationField"
 	case "hierarchical_geographic":
-		return "[]islandoraModel.HierarchicalGeographicField"
+		return "islandoraModel.HierarchicalGeographicField"
 	case "typed_relation":
-		return "[]islandoraModel.TypedRelationField"
+		return "islandoraModel.TypedRelationField"
 	case "related_item":
-		return "[]islandoraModel.RelatedItemField"
+		return "islandoraModel.RelatedItemField"
 	case "textfield_attr", "textarea_attr":
-		return "[]islandoraModel.TypedTextField"
+		return "islandoraModel.TypedTextField"
 	case "part_detail":
-		return "[]islandoraModel.PartDetailField"
+		return "islandoraModel.PartDetailField"
 	default:
-		return "[]islandoraModel.GenericField"
+		return "islandoraModel.GenericField"
 	}
 }
 

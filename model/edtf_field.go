@@ -1,19 +1,32 @@
 package model
 
-type EdtfField struct {
+import "strings"
+
+type EdtfField []Edtf
+
+type Edtf struct {
 	Value string `json:"value"`
 }
 
-func (field *EdtfField) MarshalCSV() (string, error) {
-	return field.Value, nil
+func (field EdtfField) MarshalCSV() (string, error) {
+	values := make([]string, len(field))
+	for i, field := range field {
+		values[i] = field.String()
+	}
+	return strings.Join(values, "|"), nil
 }
 
 func (field *EdtfField) UnmarshalCSV(csv string) error {
-	field.Value = csv
-
+	values := strings.Split(csv, "|")
+	s := make([]Edtf, len(values))
+	for i, value := range values {
+		s[i] = Edtf{
+			Value: value,
+		}
+	}
 	return nil
 }
 
-func (field *EdtfField) String() string {
+func (field *Edtf) String() string {
 	return field.Value
 }

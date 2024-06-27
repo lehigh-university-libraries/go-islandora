@@ -5,19 +5,19 @@ import (
 )
 
 type {{.StructName}} struct {
-	Nid               []islandoraModel.IntField             `json:"nid" csv:"node_id"`
-	Vid               []islandoraModel.IntField             `json:"vid" csv:"-"`
-	Uuid              []islandoraModel.GenericField         `json:"uuid" csv:"-"`
-	Language          []islandoraModel.GenericField         `json:"lang" csv:"langcode"`
-	RevisionTimestamp []islandoraModel.GenericField         `json:"revision_timestamp" csv:"-"`
-	RevisionUid       []islandoraModel.EntityReferenceField `json:"revision_uid" csv:"-"`
-	RevisionLog       []islandoraModel.GenericField         `json:"revision_log" csv:"-"`
-	Uid               []islandoraModel.EntityReferenceField `json:"uid" csv:"-"`
-	Title             []islandoraModel.GenericField         `json:"title" csv:"title"`
-	Type              []islandoraModel.ConfigReferenceField `json:"type" csv:"-"`
-	Status            []islandoraModel.BoolField            `json:"status" csv:"published"`
-	Created           []islandoraModel.GenericField         `json:"created" csv:"-"`
-	Changed           []islandoraModel.GenericField         `json:"changed" csv:"-"`
+	Nid               islandoraModel.IntField             `json:"nid" csv:"node_id"`
+	Vid               islandoraModel.IntField             `json:"vid" csv:"-"`
+	Uuid              islandoraModel.GenericField         `json:"uuid" csv:"-"`
+	Language          islandoraModel.GenericField         `json:"lang" csv:"langcode"`
+	RevisionTimestamp islandoraModel.GenericField         `json:"revision_timestamp" csv:"-"`
+	RevisionUid       islandoraModel.EntityReferenceField `json:"revision_uid" csv:"-"`
+	RevisionLog       islandoraModel.GenericField         `json:"revision_log" csv:"-"`
+	Uid               islandoraModel.EntityReferenceField `json:"uid" csv:"-"`
+	Title             islandoraModel.GenericField         `json:"title" csv:"title"`
+	Type              islandoraModel.ConfigReferenceField `json:"type" csv:"-"`
+	Status            islandoraModel.BoolField            `json:"status" csv:"published"`
+	Created           islandoraModel.GenericField         `json:"created" csv:"-"`
+	Changed           islandoraModel.GenericField         `json:"changed" csv:"-"`
 
 {{range .Fields}}  {{ .Name }} {{ .Type }} `json:"{{ .MachineName }},omitempty" csv:"{{ .MachineName }}"`
 {{end}}}

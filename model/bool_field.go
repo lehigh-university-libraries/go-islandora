@@ -1,27 +1,39 @@
 package model
 
-type BoolField struct {
+import "strings"
+
+type BoolField []Bool
+
+type Bool struct {
 	Value bool `json:"value"`
 }
 
-func (field *BoolField) MarshalCSV() (string, error) {
-	return field.String(), nil
-}
-
-func (field *BoolField) UnmarshalCSV(csv string) error {
-	if csv == "1" || csv == "true" {
-		field.Value = true
-	} else {
-		field.Value = false
-	}
-
-	return nil
-}
-
-func (field *BoolField) String() string {
+func (field *Bool) String() string {
 	if field.Value {
 		return "1"
 	}
 
 	return "0"
+}
+
+func (field BoolField) MarshalCSV() (string, error) {
+	values := make([]string, len(field))
+	for i, field := range field {
+		values[i] = field.String()
+	}
+	return strings.Join(values, "|"), nil
+}
+
+func (field *BoolField) UnmarshalCSV(csv string) error {
+	values := strings.Split(csv, "|")
+	s := make([]Bool, len(values))
+	for i, value := range values {
+		s[i] = Bool{}
+		if value == "1" {
+			s[i].Value = true
+		} else {
+			s[i].Value = false
+		}
+	}
+	return nil
 }

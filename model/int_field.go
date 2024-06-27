@@ -2,23 +2,37 @@ package model
 
 import (
 	"strconv"
+	"strings"
 )
 
-type IntField struct {
+type IntField []Int
+type Int struct {
 	Value int `json:"value"`
 }
 
-func (field *IntField) MarshalCSV() (string, error) {
-	return strconv.Itoa(field.Value), nil
+func (field IntField) MarshalCSV() (string, error) {
+	values := make([]string, len(field))
+	for i, field := range field {
+		values[i] = field.String()
+	}
+	return strings.Join(values, "|"), nil
 }
 
 func (field *IntField) UnmarshalCSV(csv string) error {
-	var err error
-	field.Value, err = strconv.Atoi(csv)
-
-	return err
+	values := strings.Split(csv, "|")
+	s := make([]Int, len(values))
+	for i, value := range values {
+		id, err := strconv.Atoi(value)
+		if err != nil {
+			return err
+		}
+		s[i] = Int{
+			Value: id,
+		}
+	}
+	return nil
 }
 
-func (field *IntField) String() string {
+func (field *Int) String() string {
 	return strconv.Itoa(field.Value)
 }

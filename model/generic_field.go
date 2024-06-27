@@ -1,28 +1,35 @@
 package model
 
 import (
-	"encoding/json"
-	"fmt"
+	"strings"
 )
 
-type GenericField struct {
+type GenericField []Generic
+type Generic struct {
 	Format    string `json:"format,omitempty"`
 	Processed string `json:"processed,omitempty"`
 	Value     string `json:"value"`
 }
 
-func (field *GenericField) MarshalCSV() (string, error) {
-	data, err := json.Marshal(field)
-	if err != nil {
-		return "", err
+func (field GenericField) MarshalCSV() (string, error) {
+	values := make([]string, len(field))
+	for i, field := range field {
+		values[i] = field.String()
 	}
-	return string(data), nil
+	return strings.Join(values, "|"), nil
 }
 
 func (field *GenericField) UnmarshalCSV(csv string) error {
-	return json.Unmarshal([]byte(csv), field)
+	values := strings.Split(csv, "|")
+	s := make([]Generic, len(values))
+	for i, value := range values {
+		s[i] = Generic{
+			Value: value,
+		}
+	}
+	return nil
 }
 
-func (field *GenericField) String() string {
-	return fmt.Sprintf("%+v", *field)
+func (field *Generic) String() string {
+	return field.Value
 }

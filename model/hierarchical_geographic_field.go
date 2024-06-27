@@ -2,10 +2,12 @@ package model
 
 import (
 	"encoding/json"
-	"fmt"
+	"log/slog"
+	"strings"
 )
 
-type HierarchicalGeographicField struct {
+type HierarchicalGeographicField []HierarchicalGeographic
+type HierarchicalGeographic struct {
 	City      string `json:"city,omitempty"`
 	Continent string `json:"continent,omitempty"`
 	Country   string `json:"country,omitempty"`
@@ -14,18 +16,34 @@ type HierarchicalGeographicField struct {
 	Territory string `json:"territory,omitempty"`
 }
 
-func (field *HierarchicalGeographicField) MarshalCSV() (string, error) {
+func (field *HierarchicalGeographic) String() string {
 	data, err := json.Marshal(field)
 	if err != nil {
-		return "", err
+		slog.Error("Unable to marshal hierarchical geo string", "err", err)
+		return ""
 	}
-	return string(data), nil
+
+	return string(data)
+}
+
+func (field HierarchicalGeographicField) MarshalCSV() (string, error) {
+	values := make([]string, len(field))
+	for i, field := range field {
+		values[i] = field.String()
+	}
+	return strings.Join(values, "|"), nil
 }
 
 func (field *HierarchicalGeographicField) UnmarshalCSV(csv string) error {
-	return json.Unmarshal([]byte(csv), field)
-}
-
-func (field *HierarchicalGeographicField) String() string {
-	return fmt.Sprintf("%+v", *field)
+	values := strings.Split(csv, "|")
+	s := make([]HierarchicalGeographic, len(values))
+	for i, value := range values {
+		var f HierarchicalGeographic
+		err := json.Unmarshal([]byte(value), f)
+		if err != nil {
+			return err
+		}
+		s[i] = f
+	}
+	return nil
 }
