@@ -14,9 +14,9 @@ import (
 )
 
 type Field struct {
-	Name string
-	Type string
-	Tag  string
+	Name        string
+	Type        string
+	MachineName string
 }
 
 type StructData struct {
@@ -72,9 +72,9 @@ func main() {
 
 		fieldTypeGo := mapFieldTypeToGoType(fieldType)
 		fields = append(fields, Field{
-			Name: toCamelCase(fieldName),
-			Type: fieldTypeGo,
-			Tag:  fieldName,
+			Name:        toCamelCase(fieldName),
+			Type:        fieldTypeGo,
+			MachineName: fieldName,
 		})
 	}
 
