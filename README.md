@@ -2,7 +2,7 @@
 
 Drupal/Islandora go library
 
-Generate structs based on your Islandora data model
+Generate an Open API spec based on your Islandora data model
 
 ```
 go run main.go \
