@@ -20,6 +20,162 @@ components:
     IslandoraObject:
       type: object
       properties:
+        status:
+          type: array
+          title: Status
+          items:
+            type: object
+            properties:
+              value:
+                type: boolean
+          x-go-type: islandoraModel.BoolField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        created:
+          type: array
+          title: Created
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        changed:
+          type: array
+          title: Changed
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        uid:
+          type: array
+          title: Uid
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        title:
+          type: array
+          title: Title
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        uuid:
+          type: array
+          title: Uuid
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        language:
+          type: array
+          title: Language
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        revision_timestamp:
+          type: array
+          title: RevisionTimestamp
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        revision_uid:
+          type: array
+          title: RevisionUid
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        revision_log:
+          type: array
+          title: RevisionLog
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        type:
+          type: array
+          title: Type
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        nid:
+          type: array
+          title: Nid
+          items:
+            type: object
+            properties:
+              value:
+                type: integer
+          x-go-type: islandoraModel.IntField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        vid:
+          type: array
+          title: Vid
+          items:
+            type: object
+            properties:
+              value:
+                type: integer
+          x-go-type: islandoraModel.IntField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
         field_abstract:
           type: array
           title: Abstract

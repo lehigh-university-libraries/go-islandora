@@ -64,7 +64,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	fields := []Field{}
+	fields := nodeFields()
 
 	for _, file := range files {
 		yamlFile, err := os.ReadFile(file)
@@ -177,6 +177,8 @@ func mapFieldTypeToOapiProperties(fieldType string) map[string]string {
 		properties["caption"] = "string"
 		properties["number"] = "string"
 		properties["title"] = "string"
+	case "config_reference":
+		properties["target_id"] = "string"
 	default:
 		properties["value"] = "string"
 	}
@@ -208,6 +210,8 @@ func mapFieldTypeToGoType(fieldType string) string {
 		return "islandoraModel.TypedTextField"
 	case "part_detail":
 		return "islandoraModel.PartDetailField"
+	case "config_reference":
+		return "islandoraModel.ConfigReferenceField"
 	default:
 		return "islandoraModel.GenericField"
 	}
@@ -227,4 +231,40 @@ func toCamelCase(input string) string {
 		}
 	}
 	return output
+}
+
+// some base properties for the node entity
+func nodeFields() []Field {
+	fields := []Field{}
+	f := map[string]string{
+		"nid":                "integer",
+		"vid":                "integer",
+		"uuid":               "string",
+		"language":           "string",
+		"revision_timestamp": "string",
+		"revision_uid":       "entity_reference",
+		"revision_log":       "string",
+		"uid":                "entity_reference",
+		"title":              "string",
+		"type":               "config_reference",
+		"status":             "boolean",
+		"created":            "string",
+		"changed":            "string",
+	}
+	for fieldName, fieldType := range f {
+		fields = append(fields, Field{
+			Name:           toCamelCase(fieldName),
+			OapiProperties: mapFieldTypeToOapiProperties(fieldType),
+			Title:          toCamelCase(fieldName),
+			Description:    "",
+			MachineName:    fieldName,
+			GoType:         mapFieldTypeToGoType(fieldType),
+			TypeImport: TypeImport{
+				Path: "github.com/lehigh-university-libraries/go-islandora/model",
+				Name: "islandoraModel",
+			},
+		})
+	}
+
+	return fields
 }
