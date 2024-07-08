@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"text/template"
@@ -38,8 +39,8 @@ type TypeImport struct {
 }
 
 func main() {
-	nodeCexYaml := flag.String("node-cex-yaml", "", "Path to the node CEX YAML file")
-	output := flag.String("output", "./generated_structs.go", "Output file for generated structs")
+	nodeCexYaml := flag.String("node-cex-yaml", "", "Path to the node config export YAML file")
+	output := flag.String("output", "./api.yaml", "Output file for generated Open API spec")
 	flag.Parse()
 
 	if *nodeCexYaml == "" {
@@ -115,7 +116,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	slog.Info("Structs generated and written", "file", *output)
+	slog.Info("Open API Spec generated and written", "file", *output)
+	cmd := exec.Command("go", "generate", "./api")
+	if err := cmd.Run(); err != nil {
+		slog.Error("Unable to run go generate", "err", err)
+		os.Exit(1)
+	}
+	slog.Info("Structs generated in api/islandora.gen.go")
+
 }
 
 func generateOapiSpec(data StructData) (string, error) {

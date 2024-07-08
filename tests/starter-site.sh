@@ -13,7 +13,6 @@ go run main.go \
 # TODO: if/once generation of YAML is deterministric add this check back in
 # diff api.yaml fixtures/islandora_object.yaml || (echo "Failure Maybe starter site updated its data model?" && exit 1)
 
-go generate ./api
 ls -l api/islandora.gen.go
 
 echo "Generated Open API spec matches expected output 🚀"
