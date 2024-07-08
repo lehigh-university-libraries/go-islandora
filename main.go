@@ -86,7 +86,7 @@ func main() {
 			Name:           toCamelCase(fieldName),
 			OapiProperties: mapFieldTypeToOapiProperties(fieldType),
 			Title:          data["label"].(string),
-			Description:    data["description"].(string),
+			Description:    strings.ReplaceAll(data["description"].(string), `"`, `\"`),
 			MachineName:    fieldName,
 			Required:       data["required"].(bool),
 			GoType:         mapFieldTypeToGoType(fieldType),

@@ -25,7 +25,7 @@ components:
           type: array
           title: {{ .Title }}
         {{- if .Description }}
-          description: {{ .Description }}
+          description: "{{ .Description }}"
         {{- end }}
           items:
             type: object
