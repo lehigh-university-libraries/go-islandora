@@ -1,0 +1,603 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: CSV Validation API
+paths:
+  /upload:
+    post:
+      summary: Upload CSV file
+      requestBody:
+        required: true
+        content:
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/IslandoraObject'
+      responses:
+        '200':
+          description: CSV file processed successfully
+components:
+  schemas:
+    IslandoraObject:
+      type: object
+      properties:
+        field_abstract:
+          type: array
+          title: Abstract
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_alt_title:
+          type: array
+          title: Alternative Title
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_classification:
+          type: array
+          title: Classification (Other)
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_coordinates:
+          type: array
+          title: Coordinates
+          items:
+            type: object
+            properties:
+              lat:
+                type: number
+              lng:
+                type: number
+          x-go-type: islandoraModel.GeoLocationField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_coordinates_text:
+          type: array
+          title: Coordinates (Text)
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_copyright_date:
+          type: array
+          title: Copyright Date
+          description: "Date of copyright of the resource."
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.EdtfField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_date_captured:
+          type: array
+          title: Date Captured
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.EdtfField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_date_modified:
+          type: array
+          title: Date Modified
+          description: "Date on which the original resource being represented in Islandora was changed. Typically modification dates of digital representations of the resource stored in Islandora will be recorded on the relevant Media instead of here."
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.EdtfField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_date_valid:
+          type: array
+          title: Date Valid
+          description: "Date (often a range) of validity of a resource."
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.EdtfField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_description:
+          type: array
+          title: Description
+          description: "Description of the resource. Description may include but is not limited to: an abstract, a table of contents, a graphical representation, or a free-text account of the resource."
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_dewey_classification:
+          type: array
+          title: Dewey Classification
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_edition:
+          type: array
+          title: Edition Statement
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_edtf_date:
+          type: array
+          title: Date (Unspecified)
+          description: "A date without a type or relationship to the resource specified"
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.EdtfField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_edtf_date_created:
+          type: array
+          title: Date Created
+          description: "Date of creation of the resource"
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.EdtfField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_edtf_date_issued:
+          type: array
+          title: Date Issued
+          description: "Date of formal issuance of the resource. This includes publication dates."
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.EdtfField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_extent:
+          type: array
+          title: Extent
+          description: "The size or duration of the resource in its original form. Extent of representations of the resource stored in Islandora should be recorded on the relevant Media files."
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_frequency:
+          type: array
+          title: Frequency
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_full_title:
+          type: array
+          title: Full Title
+          description: "If the full resource title is longer than 255 characters and you truncated it in the required Title field above, record the full title here."
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_genre:
+          type: array
+          title: Genre
+          description: "A term or terms that designate a category characterizing a particular style, form, or content, such as artistic, musical, literary composition, etc."
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_geographic_subject:
+          type: array
+          title: Subject (Geographic)
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_identifier:
+          type: array
+          title: Identifier
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_isbn:
+          type: array
+          title: ISBN
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_language:
+          type: array
+          title: Language
+          description: "Language of the resource content"
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_lcc_classification:
+          type: array
+          title: Library of Congress Classification
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_linked_agent:
+          type: array
+          title: Contributors
+          description: "Names of entities having some relationship to the resource, and, optionally, the relationship to the resource. If a relationship is not specified, it will be recorded as <a href=\"https://id.loc.gov/vocabulary/relators/att.html\">Attributed Name</a> in the system's linked data representation. <br /> 
+This field does not allow creating names of entities on the fly. First create a <a href=\"/admin/structure/taxonomy/manage/person/add\" target=\"_blank\">person</a>, <a href=\"/admin/structure/taxonomy/manage/family/add\" target=\"_blank\">family</a>, or <a href=\"/admin/structure/taxonomy/manage/corporate_body/add\" target=\"_blank\">corporate body</a>, then link it here.<br />
+Publisher should be recorded in the separate \"Publisher\" field (as text) which can be found under the section \"Publication Details and Dates\".  Publication Place can be recorded in \"Country of Publication\" or \"Place Published\" in the same section. "
+          items:
+            type: object
+            properties:
+              rel_type:
+                type: string
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.TypedRelationField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_local_identifier:
+          type: array
+          title: Local Identifier
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_member_of:
+          type: array
+          title: Member of
+          description: "This item's parent item in Islandora. Usually this will be a collection or compound object."
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_mode_of_issuance:
+          type: array
+          title: Mode of Issuance
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_model:
+          type: array
+          title: Model
+          description: "The internal-to-Islandora category of the resource. Affects how the item is displayed/viewed."
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_note:
+          type: array
+          title: Note
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_oclc_number:
+          type: array
+          title: OCLC Number
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_physical_form:
+          type: array
+          title: Form
+          description: "The physical format of the original resource being described. If the resource is a physical object, the physical form is recorded here. If the resource is born-digital, the original digital form is recorded here. Details of the formats of resource representations stored in Islandora should be recorded on the relevant Media files. "
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_pid:
+          type: array
+          title: PID
+          description: "PID of this object in Islandora 7.x (applies to migrated objects only)"
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_place_published:
+          type: array
+          title: Place Published
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_place_published_country:
+          type: array
+          title: Country of Publication
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_publisher:
+          type: array
+          title: Publisher
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_representative_image:
+          type: array
+          title: Representative Image
+          description: "Here, you can optionally add a thumbnail image for this node. This will take precedence over the Islandora thumbnail wherever the \"DGI Discovered Image\" field is used."
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_resource_type:
+          type: array
+          title: Type
+          description: "The general nature or genre of the content of the resource. To describe the digital or physical format of the resource, use Form instead."
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_rights:
+          type: array
+          title: Rights
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_subject:
+          type: array
+          title: Subject (Topical)
+          description: "If using separate fields to record topical, geographic, name, and temporal subjects, record topical subjects here. If not splitting subjects into to different fields, all subjects can be recorded in this field."
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_subject_general:
+          type: array
+          title: Subject
+          description: "General subjects which may include topical, geographic, temporal, and genre elements. If you wish to manage these types of subjects separately, use the more specific Subject fields.<br/><br/>Any new term added by typing it here will be added to the Subject taxonomy. If you need to create a new term in another taxonomy, do <i>Structure > Taxonomy > [the appropriate taxonomy] > Add terms</i> to add terms. You may need to save this form and reload it for your terms to be available here."
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_subjects_name:
+          type: array
+          title: Subject (Name)
+          description: "Any new term added by typing it here will be added to the Person taxonomy. If you need to create a new Corporate Body or Family taxonomy term, do <i>Structure > Taxonomy > [the appropriate taxonomy] > Add terms</i> to add terms. You may need to save this form and reload it for your terms to be available here."
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_table_of_contents:
+          type: array
+          title: Table of Contents
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+          x-go-type: islandoraModel.GenericField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_temporal_subject:
+          type: array
+          title: Subject (Temporal)
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_viewer_override:
+          type: array
+          title: Viewer Override
+          description: "Select an alternate viewer, if desired for this resource."
+          items:
+            type: object
+            properties:
+              target_id:
+                type: integer
+          x-go-type: islandoraModel.EntityReferenceField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel
+        field_weight:
+          type: array
+          title: Custom Sort Value
+          description: "Enter numeric values to force a custom sort order within a collection of resources. See <a href=\"https://www.drupal.org/node/307797\">external documentation for the <i>Weight</i> module</a>. "
+          items:
+            type: object
+            properties:
+              value:
+                type: integer
+          x-go-type: islandoraModel.IntField
+          x-go-type-import:
+            path: github.com/lehigh-university-libraries/go-islandora/model
+            name: islandoraModel

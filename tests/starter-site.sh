@@ -8,10 +8,8 @@ fi
 
 go run main.go \
   --node-cex-yaml=./islandora-starter-site/config/sync/node.type.islandora_object.yml \
-  --output=islandora/islandora_object.go
+  --output=islandora/islandora_object.yaml
 
-go fmt islandora/islandora_object.go > /dev/null
+diff islandora/islandora_object.yaml fixtures/islandora_object.yaml || (echo "Failure Maybe starter site updated its data model?" && exit 1)
 
-diff islandora/islandora_object.go fixtures/islandora_object.go || (echo "Failure Maybe starter site updated its data model?" && exit 1)
-
-echo "Generated struct matches expected output 🚀"
+echo "Generated Open API spec matches expected output 🚀"
