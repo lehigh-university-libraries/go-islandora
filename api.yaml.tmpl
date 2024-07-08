@@ -1,0 +1,47 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: CSV Validation API
+paths:
+  /upload:
+    post:
+      summary: Upload CSV file
+      requestBody:
+        required: true
+        content:
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/IslandoraObject'
+      responses:
+        '200':
+          description: CSV file processed successfully
+components:
+  schemas:
+    IslandoraObject:
+      type: object
+      properties:
+      {{- range .Fields }}
+        {{ .MachineName }}:
+          type: array
+          title: {{ .Title }}
+        {{- if .Description }}
+          description: "{{ .Description }}"
+        {{- end }}
+          items:
+            type: object
+            properties:
+            {{- range $k, $v := .OapiProperties }}
+              {{ $k }}:
+                type: {{ $v }}
+            {{- end }}
+        {{- if .GoType }}
+          x-go-type: {{ .GoType }}
+        {{- end }}
+        {{- if .TypeImport.Path }}
+          x-go-type-import:
+            path: {{ .TypeImport.Path }}
+          {{- if .TypeImport.Name }}
+            name: {{ .TypeImport.Name }}
+          {{- end }}
+        {{- end }}
+      {{- end }}

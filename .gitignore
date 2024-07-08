@@ -1,5 +1,5 @@
+api.yaml
 output.json
 go-islandora
 islandora-starter-site
-islandora/*
-!islandora/.keep
+api/islandora.gen.go

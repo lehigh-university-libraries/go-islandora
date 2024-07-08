@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/lehigh-university-libraries/go-islandora/islandora"
+	islandora "github.com/lehigh-university-libraries/go-islandora/api"
 
 	"github.com/gocarina/gocsv"
 	"github.com/stretchr/testify/assert"
@@ -67,12 +67,16 @@ func TestLoadJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load JSON: %v", err)
 	}
-
-	assert.Equal(t, "Digital files found in the UTSC Library's Digital Collections are meant for research and private study used in compliance with copyright legislation. Access to digital images and text found on this website and the technical capacity to download or copy it does not imply permission to re-use. Prior written permission to publish, or otherwise use images and text found on the website must be obtained from the copyright holder. Please contact UTSC Library for further information.", node.FieldRights[0].Value)
-	assert.Equal(t, "University of Toronto Scarborough", node.FieldPublisher[0].Value)
-	assert.Equal(t, 4, node.FieldMemberOf[0].TargetId)
-	assert.Equal(t, "1999", node.FieldEdtfDateIssued[0].Value)
-	assert.Equal(t, "islandora_object", node.Type[0].TargetId)
+	r := *node.FieldRights
+	p := *node.FieldPublisher
+	m := *node.FieldMemberOf
+	d := *node.FieldEdtfDateIssued
+	ty := *node.Type
+	assert.Equal(t, "Digital files found in the UTSC Library's Digital Collections are meant for research and private study used in compliance with copyright legislation. Access to digital images and text found on this website and the technical capacity to download or copy it does not imply permission to re-use. Prior written permission to publish, or otherwise use images and text found on the website must be obtained from the copyright holder. Please contact UTSC Library for further information.", r[0].Value)
+	assert.Equal(t, "University of Toronto Scarborough", p[0].Value)
+	assert.Equal(t, 4, m[0].TargetId)
+	assert.Equal(t, "1999", d[0].Value)
+	assert.Equal(t, "islandora_object", ty[0].TargetId)
 }
 
 func TestSaveJson(t *testing.T) {
