@@ -5,7 +5,7 @@ Drupal/Islandora go library
 Generate an Open API spec based on your Islandora data model
 
 ```
-go run main.go \
+./go-islandora generate node-structs \
   --node-cex-yaml=path/to/drupal/config/sync/node.type.islandora_object.yml \
-  --output=islandora_object.go
+  --output=api.yml
 ```
