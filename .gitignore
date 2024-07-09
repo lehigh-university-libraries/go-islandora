@@ -3,5 +3,3 @@ workbench.yaml
 output.json
 go-islandora
 islandora-starter-site
-api/islandora.gen.go
-workbench/workbench.gen.go
