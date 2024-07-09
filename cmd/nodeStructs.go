@@ -31,6 +31,7 @@ type DrupalField struct {
 type StructData struct {
 	StructName   string
 	DrupalFields []DrupalField
+	CsvColumns   []CsvColumn
 }
 
 type TypeImport struct {
@@ -111,7 +112,7 @@ used to produce Open API specs and related Go code.`,
 			DrupalFields: fields,
 		}
 
-		structCode, err := generateOapiSpec(structData)
+		structCode, err := generateOapiSpec(structData, "api.yaml.tmpl")
 		if err != nil {
 			slog.Error("Error generating Go struct", "err", err)
 			os.Exit(1)
@@ -138,15 +139,10 @@ func init() {
 
 	nodeStructsCmd.Flags().String("node-cex-yaml", "", "Path to the node config export YAML file")
 	nodeStructsCmd.Flags().String("output", "./api.yaml", "Output file for generated Open API spec")
-	err := nodeStructsCmd.MarkFlagRequired("node-cex-yaml")
-	if err != nil {
-		slog.Error("Unable to bootstrap nodeStruct cmd", "err", err)
-		os.Exit(1)
-	}
 }
 
-func generateOapiSpec(data StructData) (string, error) {
-	tmpl, err := template.ParseFiles("api.yaml.tmpl")
+func generateOapiSpec(data StructData, tmplFile string) (string, error) {
+	tmpl, err := template.ParseFiles(tmplFile)
 	if err != nil {
 		return "", err
 	}

@@ -1,0 +1,28 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: CSV Validation API
+paths:
+  /upload:
+    post:
+      summary: Upload CSV file
+      requestBody:
+        required: true
+        content:
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/SheetsCsv'
+      responses:
+        '200':
+          description: CSV file processed successfully
+components:
+  schemas:
+    SheetsCsv:
+      type: object
+      properties:
+      {{- range .CsvColumns }}
+        "{{ .ColumnName }}":
+          type: string
+          x-oapi-codegen-extra-tags:
+            csv: {{ .Tag }}
+      {{- end }}
