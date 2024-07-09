@@ -20,7 +20,7 @@ components:
     IslandoraObject:
       type: object
       properties:
-      {{- range .Fields }}
+      {{- range .DrupalFields }}
         {{ .MachineName }}:
           type: array
           title: {{ .Title }}

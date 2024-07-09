@@ -88,11 +88,13 @@ used to produce Open API specs and related Go code.`,
 
 			fieldName := data["field_name"].(string)
 			fieldType := data["field_type"].(string)
+			desc := strings.ReplaceAll(data["description"].(string), `"`, `\"`)
+			desc = strings.ReplaceAll(desc, `\\"`, `\"`)
 			fields = append(fields, DrupalField{
 				Name:           toCamelCase(fieldName),
 				OapiProperties: mapFieldTypeToOapiProperties(fieldType),
 				Title:          data["label"].(string),
-				Description:    strings.ReplaceAll(data["description"].(string), `"`, `\"`),
+				Description:    desc,
 				MachineName:    fieldName,
 				Required:       data["required"].(bool),
 				GoType:         mapFieldTypeToGoType(fieldType),
