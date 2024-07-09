@@ -18,12 +18,9 @@ func NewServer() Server {
 func (Server) PostUpload(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: transform the vanilla CSV into workbench CSV
-	resp := IslandoraObject{
-		Title: &islandoraModel.GenericField{
-			islandoraModel.Generic{
-				Value: "foo",
-			},
-		},
+	title := "foo"
+	resp := SheetsCsv{
+		Title: &title,
 	}
 
 	w.WriteHeader(http.StatusOK)
