@@ -61,12 +61,12 @@ used to produce Open API specs and related Go code.`,
 
 		files, err := filepath.Glob(filepath.Join(dir, pattern))
 		if err != nil {
-			slog.Error("Error scanning directory: %v", err)
+			slog.Error("Error scanning directory", "err", err)
 			os.Exit(1)
 		}
 
 		if len(files) == 0 {
-			slog.Error("No files found matching pattern: %s", pattern)
+			slog.Error("No files found matching pattern", "pattern", pattern)
 			os.Exit(1)
 		}
 
@@ -75,14 +75,14 @@ used to produce Open API specs and related Go code.`,
 		for _, file := range files {
 			yamlFile, err := os.ReadFile(file)
 			if err != nil {
-				slog.Error("Error reading YAML file: %s", err)
+				slog.Error("Error reading YAML file", "err", err)
 				os.Exit(1)
 			}
 
 			var data map[string]interface{}
 			err = yaml.Unmarshal(yamlFile, &data)
 			if err != nil {
-				slog.Error("Error unmarshalling YAML: %s", err)
+				slog.Error("Error unmarshalling YAML", "err", err)
 				os.Exit(1)
 			}
 
@@ -111,13 +111,13 @@ used to produce Open API specs and related Go code.`,
 
 		structCode, err := generateOapiSpec(structData)
 		if err != nil {
-			slog.Error("Error generating Go struct: %s", err)
+			slog.Error("Error generating Go struct", "err", err)
 			os.Exit(1)
 		}
 
 		err = os.WriteFile(output, []byte(structCode), 0644)
 		if err != nil {
-			slog.Error("Error writing output file: %s", err)
+			slog.Error("Error writing output file", "err", err)
 			os.Exit(1)
 		}
 
@@ -136,7 +136,11 @@ func init() {
 
 	nodeStructsCmd.Flags().String("node-cex-yaml", "", "Path to the node config export YAML file")
 	nodeStructsCmd.Flags().String("output", "./api.yaml", "Output file for generated Open API spec")
-	nodeStructsCmd.MarkFlagRequired("node-cex-yaml")
+	err := nodeStructsCmd.MarkFlagRequired("node-cex-yaml")
+	if err != nil {
+		slog.Error("Unable to bootstrap nodeStruct cmd", "err", err)
+		os.Exit(1)
+	}
 }
 
 func generateOapiSpec(data StructData) (string, error) {
