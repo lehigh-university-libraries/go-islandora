@@ -18,7 +18,7 @@ jobs:
         run: go get .
 
       - name: Build
-        run: go build -v ./...
+        run: go build
 
       - name: Generate structs
         run: ./tests/starter-site.sh
