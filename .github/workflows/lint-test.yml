@@ -14,19 +14,19 @@ jobs:
 
       - uses: actions/setup-go@v4
 
+      - name: Install dependencies
+        run: go get .
+
+      - name: Build
+        run: go build
+
       - name: Generate structs
         run: ./tests/starter-site.sh
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.54
-
-      - name: Install dependencies
-        run: go get .
-
-      - name: Build
-        run: go build -v ./...
+          version: v1.59.1
 
       - name: Run tests
         run: go test -v ./... && git diff fixtures

@@ -6,7 +6,7 @@ if [ ! -d ./islandora-starter-site ]; then
   git clone https://github.com/Islandora-Devops/islandora-starter-site
 fi
 
-go run main.go \
+./go-islandora generate node-structs \
   --node-cex-yaml=./islandora-starter-site/config/sync/node.type.islandora_object.yml \
   --output=api.yaml
 
