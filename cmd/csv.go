@@ -7,6 +7,8 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"sort"
+	"strconv"
 
 	"github.com/spf13/cobra"
 )
@@ -18,6 +20,29 @@ var parentModels = []string{
 	"Paged Content",
 	"Publication Issue",
 	"Sub-Collection",
+}
+
+// Custom type for sorting rows
+type Row map[string]string
+
+// Custom sorting function
+type ByFieldMemberOfAndWeight []Row
+
+func (a ByFieldMemberOfAndWeight) Len() int {
+	return len(a)
+}
+
+func (a ByFieldMemberOfAndWeight) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
+}
+
+func (a ByFieldMemberOfAndWeight) Less(i, j int) bool {
+	if a[i]["field_member_of"] == a[j]["field_member_of"] {
+		weightI, _ := strconv.Atoi(a[i]["field_weight"])
+		weightJ, _ := strconv.Atoi(a[j]["field_weight"])
+		return weightI < weightJ
+	}
+	return a[i]["field_member_of"] < a[j]["field_member_of"]
 }
 
 // csvCmd represents the csv command
@@ -36,7 +61,7 @@ var csvCmd = &cobra.Command{
 
 		var allHeaders []string
 		headerMap := make(map[string]bool)
-		rows := []map[string]string{}
+		rows := []Row{}
 		nodeIDMap := make(map[string]bool)
 
 		// Fetch the initial CSV
@@ -47,7 +72,7 @@ var csvCmd = &cobra.Command{
 
 		// Process the initial CSV to find unique columns and rows to fetch
 		for _, record := range initialCSV[1:] { // Skip header row
-			row := make(map[string]string)
+			row := make(Row)
 			nodeID := ""
 
 			for i, header := range initialCSV[0] {
@@ -76,7 +101,7 @@ var csvCmd = &cobra.Command{
 				}
 
 				for _, subRecord := range subCSV[1:] { // Skip header row
-					subRow := make(map[string]string)
+					subRow := make(Row)
 					subNodeID := ""
 
 					for i, subHeader := range subCSV[0] {
@@ -97,6 +122,9 @@ var csvCmd = &cobra.Command{
 				}
 			}
 		}
+
+		// Sort the rows by field_member_of and then by field_weight
+		sort.Sort(ByFieldMemberOfAndWeight(rows))
 
 		// Write to the output CSV
 		outFile, err := os.Create(csvFile)
