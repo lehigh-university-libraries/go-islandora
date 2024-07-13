@@ -60,6 +60,7 @@ var csvCmd = &cobra.Command{
 		baseURL := fmt.Sprintf("%s/node/%s?_format=workbench_csv", baseUrl, nid)
 
 		var allHeaders []string
+		var err error
 		headerMap := make(map[string]bool)
 		rows := []Row{}
 		nodeIDMap := make(map[string]bool)
@@ -136,14 +137,22 @@ var csvCmd = &cobra.Command{
 		csvWriter := csv.NewWriter(outFile)
 		defer csvWriter.Flush()
 
-		csvWriter.Write(allHeaders)
+		err = csvWriter.Write(allHeaders)
+		if err != nil {
+			slog.Error("Unable to write to CSV", "err", err)
+			os.Exit(1)
+		}
 
 		for _, row := range rows {
 			record := make([]string, len(allHeaders))
 			for i, header := range allHeaders {
 				record[i] = row[header]
 			}
-			csvWriter.Write(record)
+			err = csvWriter.Write(record)
+			if err != nil {
+				slog.Error("Unable to write to CSV", "err", err)
+				os.Exit(1)
+			}
 		}
 
 		fmt.Println("CSV files merged successfully into", csvFile)
