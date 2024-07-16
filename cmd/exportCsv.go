@@ -45,8 +45,8 @@ func (a ByFieldMemberOfAndWeight) Less(i, j int) bool {
 	return a[i]["field_member_of"] < a[j]["field_member_of"]
 }
 
-// csvCmd represents the csv command
-var csvCmd = &cobra.Command{
+// exportCsvCmd represents the csv command
+var exportCsvCmd = &cobra.Command{
 	Use:   "csv",
 	Short: "Recursively export a workbench CSV for an Islandora node",
 	Long:  `Recursively export a workbench CSV for an Islandora node.`,
@@ -160,9 +160,9 @@ var csvCmd = &cobra.Command{
 }
 
 func init() {
-	exportCmd.AddCommand(csvCmd)
-	csvCmd.Flags().StringVar(&nid, "nid", "", "The node ID to export a CSV")
-	csvCmd.Flags().StringVar(&csvFile, "output", "merged.csv", "The CSV file name to save the export to")
+	exportCmd.AddCommand(exportCsvCmd)
+	exportCsvCmd.Flags().StringVar(&nid, "nid", "", "The node ID to export a CSV")
+	exportCsvCmd.Flags().StringVar(&csvFile, "output", "merged.csv", "The CSV file name to save the export to")
 }
 
 func fetchCSV(url string) ([][]string, error) {
