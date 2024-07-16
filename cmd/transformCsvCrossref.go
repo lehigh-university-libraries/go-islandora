@@ -5,7 +5,9 @@ import (
 	"log/slog"
 	"os"
 	"text/template"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/lehigh-university-libraries/go-islandora/model/crossref"
 	"github.com/spf13/cobra"
 )
@@ -37,6 +39,8 @@ var transformCsvCrossrefCmd = &cobra.Command{
 					Name:  crossrefDepositorName,
 					Email: crossrefDepositorEmail,
 				},
+				Timestamp: time.Now().Unix(),
+				BatchId:   uuid.New().String(),
 			},
 			DoiData: crossref.DoiData{
 				Doi: "pbe",

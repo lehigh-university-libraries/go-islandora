@@ -3,7 +3,7 @@ package crossref
 type CrossrefHead struct {
 	Registrant string
 	Depositor  Depositor
-	Timestamp  string
+	Timestamp  int64
 	BatchId    string
 }
 
