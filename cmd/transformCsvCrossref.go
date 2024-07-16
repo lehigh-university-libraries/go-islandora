@@ -2,13 +2,20 @@ package cmd
 
 import (
 	"bytes"
+	"encoding/json"
+	"log"
 	"log/slog"
 	"os"
+	"strconv"
+	"strings"
 	"text/template"
 	"time"
 
+	"github.com/gocarina/gocsv"
 	"github.com/google/uuid"
+	"github.com/lehigh-university-libraries/go-islandora/model"
 	"github.com/lehigh-university-libraries/go-islandora/model/crossref"
+	"github.com/lehigh-university-libraries/go-islandora/workbench"
 	"github.com/spf13/cobra"
 )
 
@@ -32,6 +39,116 @@ var transformCsvCrossrefCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+		file, err := os.Open(source)
+		if err != nil {
+			log.Fatalf("could not open the CSV file: %v", err)
+		}
+		defer file.Close()
+
+		var rows []*workbench.SheetsCsv
+
+		if err := gocsv.UnmarshalFile(file, &rows); err != nil {
+			log.Fatalf("could not unmarshal CSV file: %v", err)
+		}
+
+		nodeIDMap := make(map[string]*workbench.SheetsCsv)
+		for _, row := range rows[:1] {
+			nodeIDMap[*row.NodeID] = row
+		}
+		var volumes []crossref.IssuelessVolume
+		for _, row := range rows[2:] {
+			if *row.ObjectModel == "Sub-Collection" {
+				volume := crossref.IssuelessVolume{
+					JournalTitle: *rows[1].Title,
+				}
+				for _, id := range strings.Split(*row.Identifier, "|") {
+					if id == "" {
+						continue
+					}
+					var identifier model.TypedText
+					slog.Info("ID", "id", id)
+					err = json.Unmarshal([]byte(id), &identifier)
+					if err != nil {
+						slog.Error("Unable to unmarshal identifier", "err", err)
+						os.Exit(1)
+					}
+					if identifier.Attr0 == "doi" {
+						volume.DoiData = crossref.DoiData{
+							Doi: identifier.Value,
+							Url: *row.Url,
+						}
+					}
+				}
+
+				for _, checkRow := range rows {
+					if *checkRow.ParentCollection == *row.NodeID {
+						first := true
+						year, err := strconv.Atoi(*checkRow.CreationDate)
+						if err != nil {
+							slog.Error("Unable to convert year to int", "err", err)
+							os.Exit(1)
+						}
+						volume.Year = year
+						article := crossref.Article{
+							Title: *checkRow.FullTitle,
+							Year:  year,
+						}
+						for _, agent := range strings.Split(*checkRow.LinkedAgent, "|") {
+							components := strings.Split(agent, ":")
+							if len(components) < 3 {
+								continue
+							}
+							if components[2] != "person" {
+								continue
+							}
+							if components[1] == "cre" || components[1] == "aut" {
+								name := strings.Join(components[3:], ":")
+								nameComponents := strings.Split(name, ", ")
+								surname := nameComponents[0]
+								given := ""
+								if len(nameComponents) > 1 {
+									given = strings.Join(nameComponents[1:], ", ")
+								}
+								sequence := "additional"
+								if first {
+									first = false
+									sequence = "first"
+								}
+								article.Contributors = append(article.Contributors, crossref.Contributor{
+									Name: crossref.PersonName{
+										Given:   given,
+										Surname: surname,
+									},
+									Role:     "author",
+									Sequence: sequence,
+								})
+							}
+						}
+						for _, id := range strings.Split(*checkRow.Identifier, "|") {
+							if id == "" {
+								continue
+							}
+							var identifier model.TypedText
+							err = json.Unmarshal([]byte(id), &identifier)
+							if err != nil {
+								slog.Error("Unable to unmarshal identifier", "err", err)
+								os.Exit(1)
+							}
+							if identifier.Attr0 == "doi" {
+								article.DoiData = crossref.DoiData{
+									Doi: identifier.Value,
+									Url: *checkRow.Url,
+								}
+								break
+							}
+						}
+						volume.Articles = append(volume.Articles, article)
+					}
+				}
+				volumes = append(volumes, volume)
+			}
+		}
+
 		journalData := crossref.Journal{
 			Head: crossref.CrossrefHead{
 				Registrant: crossrefRegistrant,
@@ -43,39 +160,10 @@ var transformCsvCrossrefCmd = &cobra.Command{
 				BatchId:   uuid.New().String(),
 			},
 			DoiData: crossref.DoiData{
-				Doi: "pbe",
-				Url: "https://joecorall.com/volume/7",
+				Doi: *rows[1].Url,
+				Url: *rows[1].Url,
 			},
-			IssuelessVolumes: []crossref.IssuelessVolume{
-				crossref.IssuelessVolume{
-					JournalTitle: "Perspectives on Business and Economics",
-					Year:         2009,
-					Number:       "12",
-					DoiData: crossref.DoiData{
-						Doi: "pbe-v123",
-						Url: "https://joecorall.com/volume/7",
-					},
-					Articles: []crossref.Article{
-						crossref.Article{
-							Contributors: []crossref.Contributor{
-								crossref.Contributor{
-									Name: crossref.PersonName{
-										Surname: "Corall",
-										Given:   "Joe",
-									},
-									Role:     "author",
-									Sequence: "first",
-								},
-							},
-							Year: 2009,
-							DoiData: crossref.DoiData{
-								Doi: "pbe-v123-a456",
-								Url: "https://joecorall.com/article/12",
-							},
-						},
-					},
-				},
-			},
+			IssuelessVolumes: volumes,
 		}
 		tmpl, err := template.ParseFiles("crossref/issueless-journal.xml.tmpl")
 		if err != nil {

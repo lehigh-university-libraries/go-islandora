@@ -53,7 +53,7 @@ used to produce Open API specs and related Go code.`,
 func init() {
 	generateCmd.AddCommand(sheetsStructsCmd)
 
-	sheetsStructsCmd.Flags().String("output", "./api.yaml", "Output file for generated Open API spec")
+	sheetsStructsCmd.Flags().String("output", "./workbench.yaml", "Output file for generated Open API spec")
 }
 
 func sheetsFields() []CsvColumn {
@@ -122,6 +122,9 @@ func sheetsFields() []CsvColumn {
 		"Report Number (included only on ATLSS and Fritz Lab spreadsheet)": "field_identifier.attr0=report-number",
 		"Rights Statement": "field_rights",
 		"Access":           "field_access",
+		"LinkedAgent":      "field_linked_agent",
+		"Identifier":       "field_identifier",
+		"Url":              "url",
 	}
 	for column, field := range f {
 		fields = append(fields, CsvColumn{
