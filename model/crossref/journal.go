@@ -27,6 +27,7 @@ type Article struct {
 	DoiData      DoiData `xml:"doi_data"`
 	Year         int
 	References   []Reference
+	LicenseRef   string
 }
 
 type Reference struct {

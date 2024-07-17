@@ -55,16 +55,14 @@
           <doi>{{ .DoiData.Doi }}</doi>
           <resource>{{ .DoiData.Url }}</resource>
         </doi_data>
-        <component_list>
-        {{- range .References }}
-          <component parent_relation="reference">
-            <doi_data>
-              <doi>{{ .DoiData.Doi }}</doi>
-              <resource>{{ .DoiData.Url }}</resource>
-            </doi_data>
-          </component>
-        {{- end }}
-        </component_list>
+      {{- if .Abstract }}
+        {{ .Abstract }}
+      {{- end }}
+      {{- if .LicenseRef }}
+        <ai:program name="AccessIndicators">
+          <ai:license_ref >{{ .LicenseRef }}</ai:license_ref>
+        </ai:program>
+      {{- end }}
       </journal_article>
     {{- end }}
     </journal>

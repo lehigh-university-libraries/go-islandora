@@ -125,6 +125,8 @@ func sheetsFields() []CsvColumn {
 		"LinkedAgent":      "field_linked_agent",
 		"Identifier":       "field_identifier",
 		"Url":              "url",
+		"References":       "references",
+		"FieldAbstract":    "field_abstract",
 	}
 	for column, field := range f {
 		fields = append(fields, CsvColumn{

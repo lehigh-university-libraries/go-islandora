@@ -93,6 +93,22 @@ var transformCsvCrossrefCmd = &cobra.Command{
 							Title: *checkRow.FullTitle,
 							Year:  year,
 						}
+						if *checkRow.RightsStatement != "" && !strings.Contains(*checkRow.RightsStatement, ".getty") {
+							article.LicenseRef = *checkRow.RightsStatement
+						}
+						if *checkRow.FieldAbstract != "" {
+							var abstract model.TypedText
+							err = json.Unmarshal([]byte(*checkRow.FieldAbstract), &abstract)
+							if err != nil {
+								slog.Error("Unable to unmarshal abstract", "err", err)
+								os.Exit(1)
+							}
+							article.Abstract, err = crossref.StrToJATS(abstract.Value)
+							if err != nil {
+								slog.Error("Unable to convert abstract to JATS", "err", err)
+								os.Exit(1)
+							}
+						}
 						for _, agent := range strings.Split(*checkRow.LinkedAgent, "|") {
 							components := strings.Split(agent, ":")
 							if len(components) < 3 {
@@ -141,6 +157,18 @@ var transformCsvCrossrefCmd = &cobra.Command{
 								}
 								break
 							}
+						}
+
+						for _, doi := range strings.Split(*checkRow.References, "|") {
+							if doi == "" {
+								continue
+							}
+							reference := crossref.Reference{
+								crossref.DoiData{
+									Doi: doi,
+								},
+							}
+							article.References = append(article.References, reference)
 						}
 						volume.Articles = append(volume.Articles, article)
 					}

@@ -37,6 +37,7 @@ type SheetsCsv struct {
 	Dimensions                                                     *string `csv:"field_extent.attr0=dimensions" json:"Dimensions,omitempty"`
 	Edition                                                        *string `csv:"field_edition" json:"Edition,omitempty"`
 	EmbargoUntilDate                                               *string `csv:"field_edtf_date_embargo" json:"Embargo Until Date,omitempty"`
+	FieldAbstract                                                  *string `csv:"field_abstract" json:"FieldAbstract,omitempty"`
 	FileFormatMIMEType                                             *string `csv:"field_media_type" json:"File Format (MIME Type),omitempty"`
 	FilePath                                                       *string `csv:"file" json:"File Path,omitempty"`
 	FileSize                                                       *string `csv:"field_extent.attr0=bytes" json:"File Size,omitempty"`
@@ -62,6 +63,7 @@ type SheetsCsv struct {
 	PhysicalFormatGettyAAT                                         *string `csv:"field_physical_form" json:"Physical Format (Getty AAT),omitempty"`
 	PreferredCitationIncludedOnlyInFritzLabAndEnvironmentalReports *string `csv:"field_note.attr0=preferred-citation" json:"Preferred-Citation (included only in Fritz Lab and Environmental reports),omitempty"`
 	Publisher                                                      *string `csv:"field_publisher" json:"Publisher,omitempty"`
+	References                                                     *string `csv:"references" json:"References,omitempty"`
 	RelatedDepartment                                              *string `csv:"field_department_name" json:"Related Department,omitempty"`
 	ReportNumberIncludedOnlyOnATLSSAndFritzLabSpreadsheet          *string `csv:"field_identifier.attr0=report-number" json:"Report Number (included only on ATLSS and Fritz Lab spreadsheet),omitempty"`
 	ResourceType                                                   *string `csv:"field_resource_type" json:"Resource Type,omitempty"`
