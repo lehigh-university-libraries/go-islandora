@@ -14,8 +14,8 @@
       <journal_metadata language="en">
         <full_title>{{ .JournalTitle }}</full_title>
         <doi_data>
-          <doi>{{ .DoiData.Doi }}</doi>
-          <resource>{{ .DoiData.Url }}</resource>
+          <doi>{{ .JournalDoiData.Doi }}</doi>
+          <resource>{{ .JournalDoiData.Url }}</resource>
         </doi_data>
       </journal_metadata>
       <journal_issue>
@@ -25,8 +25,8 @@
         <journal_volume>
           <volume>{{ .Number }}</volume>
           <doi_data>
-            <doi>{{ .DoiData.Doi }}</doi>
-            <resource>{{ .DoiData.Url }}</resource>
+            <doi>{{ .VolumeDoiData.Doi }}</doi>
+            <resource>{{ .VolumeDoiData.Url }}</resource>
           </doi_data>
         </journal_volume>
       </journal_issue>

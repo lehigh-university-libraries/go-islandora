@@ -53,14 +53,33 @@ var transformCsvCrossrefCmd = &cobra.Command{
 		}
 
 		nodeIDMap := make(map[string]*workbench.SheetsCsv)
-		for _, row := range rows[:1] {
+		for _, row := range rows {
 			nodeIDMap[*row.NodeID] = row
 		}
 		var volumes []crossref.IssuelessVolume
-		for _, row := range rows[2:] {
+
+		journalDoiData := crossref.DoiData{}
+		for _, id := range strings.Split(*rows[0].Identifier, "|") {
+			if id == "" {
+				continue
+			}
+			var identifier model.TypedText
+			err = json.Unmarshal([]byte(id), &identifier)
+			if err != nil {
+				slog.Error("Unable to unmarshal journal identifier", "err", err)
+				os.Exit(1)
+			}
+			if identifier.Attr0 == "doi" {
+				journalDoiData.Doi = identifier.Value
+				journalDoiData.Url = *rows[0].Url
+				break
+			}
+		}
+		for _, row := range rows[1:] {
 			if *row.ObjectModel == "Sub-Collection" {
 				volume := crossref.IssuelessVolume{
-					JournalTitle: *rows[1].Title,
+					JournalTitle:   *rows[0].Title,
+					JournalDoiData: journalDoiData,
 				}
 				for _, id := range strings.Split(*row.Identifier, "|") {
 					if id == "" {
@@ -73,7 +92,7 @@ var transformCsvCrossrefCmd = &cobra.Command{
 						os.Exit(1)
 					}
 					if identifier.Attr0 == "doi" {
-						volume.DoiData = crossref.DoiData{
+						volume.VolumeDoiData = crossref.DoiData{
 							Doi: identifier.Value,
 							Url: *row.Url,
 						}
@@ -201,10 +220,6 @@ var transformCsvCrossrefCmd = &cobra.Command{
 				},
 				Timestamp: time.Now().Unix(),
 				BatchId:   uuid.New().String(),
-			},
-			DoiData: crossref.DoiData{
-				Doi: *rows[1].Url,
-				Url: *rows[1].Url,
 			},
 			IssuelessVolumes: volumes,
 		}
