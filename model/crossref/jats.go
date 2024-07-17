@@ -3,7 +3,6 @@ package crossref
 import (
 	"bytes"
 	"encoding/xml"
-	"log/slog"
 
 	"golang.org/x/net/html"
 )
@@ -34,9 +33,7 @@ func StrToJATS(htmlContent string) (string, error) {
 		return "", err
 	}
 
-	slog.Info("NODE", "n", node, "html", htmlContent)
 	var section Section
-
 	var f func(*html.Node)
 	f = func(n *html.Node) {
 		if n.Type == html.ElementNode && n.Data == "p" {
@@ -48,7 +45,7 @@ func StrToJATS(htmlContent string) (string, error) {
 	}
 	f(node)
 
-	output, err := xml.MarshalIndent(section, "", "  ")
+	output, err := xml.Marshal(section)
 	if err != nil {
 		return "", err
 	}

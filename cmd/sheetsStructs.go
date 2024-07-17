@@ -127,6 +127,7 @@ func sheetsFields() []CsvColumn {
 		"Url":              "url",
 		"References":       "references",
 		"FieldAbstract":    "field_abstract",
+		"PartDetail":       "field_part_detail",
 	}
 	for column, field := range f {
 		fields = append(fields, CsvColumn{

@@ -3,6 +3,7 @@ package cmd
 import (
 	"bytes"
 	"encoding/json"
+	"html"
 	"log"
 	"log/slog"
 	"os"
@@ -66,7 +67,6 @@ var transformCsvCrossrefCmd = &cobra.Command{
 						continue
 					}
 					var identifier model.TypedText
-					slog.Info("ID", "id", id)
 					err = json.Unmarshal([]byte(id), &identifier)
 					if err != nil {
 						slog.Error("Unable to unmarshal identifier", "err", err)
@@ -90,7 +90,7 @@ var transformCsvCrossrefCmd = &cobra.Command{
 						}
 						volume.Year = year
 						article := crossref.Article{
-							Title: *checkRow.FullTitle,
+							Title: html.EscapeString(*checkRow.FullTitle),
 							Year:  year,
 						}
 						if *checkRow.RightsStatement != "" && !strings.Contains(*checkRow.RightsStatement, ".getty") {
@@ -132,8 +132,8 @@ var transformCsvCrossrefCmd = &cobra.Command{
 								}
 								article.Contributors = append(article.Contributors, crossref.Contributor{
 									Name: crossref.PersonName{
-										Given:   given,
-										Surname: surname,
+										Given:   html.EscapeString(given),
+										Surname: html.EscapeString(surname),
 									},
 									Role:     "author",
 									Sequence: sequence,
@@ -156,6 +156,21 @@ var transformCsvCrossrefCmd = &cobra.Command{
 									Url: *checkRow.Url,
 								}
 								break
+							}
+						}
+
+						if volume.Number == "" {
+							for _, detail := range strings.Split(*checkRow.PartDetail, "|") {
+								var pt model.PartDetail
+								err = json.Unmarshal([]byte(detail), &pt)
+								if err != nil {
+									slog.Error("Unable to unmarshal part detail", "err", err)
+									os.Exit(1)
+								}
+								if pt.Type == "volume" {
+									volume.Number = pt.Number
+									break
+								}
 							}
 						}
 

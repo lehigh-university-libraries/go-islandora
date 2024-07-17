@@ -60,6 +60,7 @@ type SheetsCsv struct {
 	PageNumbers                                                    *string `csv:"field_part_detail.attr0=page" json:"Page Numbers,omitempty"`
 	PageItemParentID                                               *string `csv:"parent_id" json:"Page/Item Parent ID,omitempty"`
 	ParentCollection                                               *string `csv:"field_member_of" json:"Parent Collection,omitempty"`
+	PartDetail                                                     *string `csv:"field_part_detail" json:"PartDetail,omitempty"`
 	PhysicalFormatGettyAAT                                         *string `csv:"field_physical_form" json:"Physical Format (Getty AAT),omitempty"`
 	PreferredCitationIncludedOnlyInFritzLabAndEnvironmentalReports *string `csv:"field_note.attr0=preferred-citation" json:"Preferred-Citation (included only in Fritz Lab and Environmental reports),omitempty"`
 	Publisher                                                      *string `csv:"field_publisher" json:"Publisher,omitempty"`
