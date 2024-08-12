@@ -23,12 +23,7 @@ type SheetsCsv struct {
 	CaptureDevice                                                  *string `csv:"field_note.attr0=capture-device" json:"Capture Device,omitempty"`
 	CatalogOrArchivesSpaceURL                                      *string `csv:"field_identifier.attr0=uri" json:"Catalog or ArchivesSpace URL,omitempty"`
 	ChildSortOrder                                                 *string `csv:"field_weight" json:"Child Sort Order,omitempty"`
-	ContributorEmail1                                              *string `csv:"field_linked_agent.entity.field_email" json:"Contributor Email 1,omitempty"`
-	ContributorInstitution1                                        *string `csv:"field_linked_agent.entity.field_relationships" json:"Contributor Institution 1,omitempty"`
-	ContributorName1                                               *string `csv:"field_linked_agent.name" json:"Contributor Name 1,omitempty"`
-	ContributorRelator1                                            *string `csv:"field_linked_agent.rel_type" json:"Contributor Relator 1,omitempty"`
-	ContributorStatus1                                             *string `csv:"field_linked_agent.entity.field_contributor_status" json:"Contributor Status 1,omitempty"`
-	ContributorType1                                               *string `csv:"field_linked_agent.vid" json:"Contributor Type 1,omitempty"`
+	Contributor                                                    *string `csv:"field_linked_agent" json:"Contributor,omitempty"`
 	CreationDate                                                   *string `csv:"field_edtf_date_issued" json:"Creation Date,omitempty"`
 	DOI                                                            *string `csv:"field_identifier.attr0=doi" json:"DOI,omitempty"`
 	DateCaptured                                                   *string `csv:"field_edtf_date_captured" json:"Date Captured,omitempty"`
@@ -50,7 +45,6 @@ type SheetsCsv struct {
 	LocalRestriction                                               *string `csv:"field_local_restriction" json:"Local Restriction,omitempty"`
 	MakePublicYN                                                   *string `csv:"published" json:"Make Public (Y/N),omitempty"`
 	NodeID                                                         *string `csv:"nid" json:"Node ID,omitempty"`
-	ORCIDNumber1                                                   *string `csv:"field_linked_agent.entity.field_identifier.attr0=orcid" json:"ORCID Number 1,omitempty"`
 	ObjectModel                                                    *string `csv:"field_model" json:"Object Model,omitempty"`
 	PPI                                                            *string `csv:"field_note.attr0=ppi" json:"PPI,omitempty"`
 	PageCount                                                      *string `csv:"field_extent.attr0=page" json:"Page Count,omitempty"`
