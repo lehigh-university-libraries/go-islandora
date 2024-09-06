@@ -10,6 +10,7 @@ type TypedRelationField []TypedRelation
 type TypedRelation struct {
 	TargetId int    `json:"target_id"`
 	RelType  string `json:"rel_type"`
+	Url      string `json:"url"`
 }
 
 func (field *TypedRelation) String() string {

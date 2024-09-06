@@ -53,7 +53,7 @@ used to produce Open API specs and related Go code.`,
 func init() {
 	generateCmd.AddCommand(sheetsStructsCmd)
 
-	sheetsStructsCmd.Flags().String("output", "./api.yaml", "Output file for generated Open API spec")
+	sheetsStructsCmd.Flags().String("output", "./workbench.yaml", "Output file for generated Open API spec")
 }
 
 func sheetsFields() []CsvColumn {
@@ -63,7 +63,7 @@ func sheetsFields() []CsvColumn {
 		"Upload ID":                   "id",
 		"Page/Item Parent ID":         "parent_id",
 		"Child Sort Order":            "field_weight",
-		"Node ID":                     "nid",
+		"Node ID":                     "node_id",
 		"Parent Collection":           "field_member_of",
 		"Object Model":                "field_model",
 		"File Path":                   "file",
@@ -71,7 +71,6 @@ func sheetsFields() []CsvColumn {
 		"Title":                       "title",
 		"Full Title":                  "field_full_title",
 		"Make Public (Y/N)":           "published",
-		"Contributor":                 "field_linked_agent",
 		"Related Department":          "field_department_name",
 		"Resource Type":               "field_resource_type",
 		"Genre (Getty AAT)":           "field_genre",
@@ -116,6 +115,12 @@ func sheetsFields() []CsvColumn {
 		"Report Number (included only on ATLSS and Fritz Lab spreadsheet)": "field_identifier.attr0=report-number",
 		"Rights Statement": "field_rights",
 		"Access":           "field_access",
+		"LinkedAgent":      "field_linked_agent",
+		"Identifier":       "field_identifier",
+		"Url":              "url",
+		"References":       "references",
+		"FieldAbstract":    "field_abstract",
+		"PartDetail":       "field_part_detail",
 	}
 	for column, field := range f {
 		fields = append(fields, CsvColumn{
