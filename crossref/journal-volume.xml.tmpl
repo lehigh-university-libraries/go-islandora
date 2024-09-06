@@ -46,12 +46,23 @@
             <given_name>{{ .Name.Given }}</given_name>
           {{- end }}
             <surname>{{ .Name.Surname }}</surname>
+          {{- if .Name.Institution }}
+            <affiliation>{{ .Name.Institution }}</affiliation>
+          {{- end }}
+          {{- if .Name.ORCID }}
+            <ORCID>{{ .Name.ORCID }}</ORCID>
+          {{- end }}
           </person_name>
           {{- if .Organization }}
           <organization sequence="additional" contributor_role="{{ .Role }}">{{ .Organization }}</organization>
           {{- end }}
         {{- end }}
         </contributors>
+      {{- end }}
+      {{- if .LicenseRef }}
+        <license>
+          <license_ref>{{ .LicenseRef }}</license_ref>
+        </license>
       {{- end }}
         <publication_date media_type="online">
           <year>{{ .Year }}</year>

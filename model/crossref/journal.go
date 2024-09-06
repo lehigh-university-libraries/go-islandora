@@ -34,17 +34,3 @@ type Article struct {
 type Reference struct {
 	DoiData DoiData
 }
-
-type Contributor struct {
-	Name         PersonName
-	Suffix       string
-	Organization string
-	Orcid        string
-	Role         string
-	Sequence     string
-}
-
-type PersonName struct {
-	Surname string `xml:"surname"`
-	Given   string `xml:"given_name,omitempty"`
-}

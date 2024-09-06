@@ -147,25 +147,10 @@ var transformCsvCrossrefCmd = &cobra.Command{
 								}
 								if components[1] == "cre" || components[1] == "aut" {
 									name := strings.Join(components[3:], ":")
-									nameComponents := strings.Split(name, ", ")
-									surname := nameComponents[0]
-									given := ""
-									if len(nameComponents) > 1 {
-										given = strings.Join(nameComponents[1:], ", ")
-									}
-									sequence := "additional"
+									article.Contributors = append(article.Contributors, crossref.GetContributor(name, first))
 									if first {
 										first = false
-										sequence = "first"
 									}
-									article.Contributors = append(article.Contributors, crossref.Contributor{
-										Name: crossref.PersonName{
-											Given:   html.EscapeString(given),
-											Surname: html.EscapeString(surname),
-										},
-										Role:     "author",
-										Sequence: sequence,
-									})
 								}
 							}
 						}

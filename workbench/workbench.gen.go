@@ -23,7 +23,6 @@ type SheetsCsv struct {
 	CaptureDevice                                                  *string `csv:"field_note.attr0=capture-device" json:"Capture Device,omitempty"`
 	CatalogOrArchivesSpaceURL                                      *string `csv:"field_identifier.attr0=uri" json:"Catalog or ArchivesSpace URL,omitempty"`
 	ChildSortOrder                                                 *string `csv:"field_weight" json:"Child Sort Order,omitempty"`
-	Contributor                                                    *string `csv:"field_linked_agent" json:"Contributor,omitempty"`
 	CreationDate                                                   *string `csv:"field_edtf_date_issued" json:"Creation Date,omitempty"`
 	DOI                                                            *string `csv:"field_identifier.attr0=doi" json:"DOI,omitempty"`
 	DateCaptured                                                   *string `csv:"field_edtf_date_captured" json:"Date Captured,omitempty"`

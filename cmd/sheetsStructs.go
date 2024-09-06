@@ -71,7 +71,6 @@ func sheetsFields() []CsvColumn {
 		"Title":                       "title",
 		"Full Title":                  "field_full_title",
 		"Make Public (Y/N)":           "published",
-		"Contributor":                 "field_linked_agent",
 		"Related Department":          "field_department_name",
 		"Resource Type":               "field_resource_type",
 		"Genre (Getty AAT)":           "field_genre",
