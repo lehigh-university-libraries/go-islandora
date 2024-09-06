@@ -47,7 +47,7 @@ type SheetsCsv struct {
 	LinkedAgent                                                    *string `csv:"field_linked_agent" json:"LinkedAgent,omitempty"`
 	LocalRestriction                                               *string `csv:"field_local_restriction" json:"Local Restriction,omitempty"`
 	MakePublicYN                                                   *string `csv:"published" json:"Make Public (Y/N),omitempty"`
-	NodeID                                                         *string `csv:"nid" json:"Node ID,omitempty"`
+	NodeID                                                         *string `csv:"node_id" json:"Node ID,omitempty"`
 	ObjectModel                                                    *string `csv:"field_model" json:"Object Model,omitempty"`
 	PPI                                                            *string `csv:"field_note.attr0=ppi" json:"PPI,omitempty"`
 	PageCount                                                      *string `csv:"field_extent.attr0=page" json:"Page Count,omitempty"`

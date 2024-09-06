@@ -63,7 +63,7 @@ func sheetsFields() []CsvColumn {
 		"Upload ID":                   "id",
 		"Page/Item Parent ID":         "parent_id",
 		"Child Sort Order":            "field_weight",
-		"Node ID":                     "nid",
+		"Node ID":                     "node_id",
 		"Parent Collection":           "field_member_of",
 		"Object Model":                "field_model",
 		"File Path":                   "file",

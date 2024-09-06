@@ -9,7 +9,7 @@
     <registrant>{{ .Head.Registrant }}</registrant>
   </head>
   <body>
-  {{- range .IssuelessVolumes }}
+  {{- range .JournalVolume }}
     <journal>
       <journal_metadata language="en">
         <full_title>{{ .JournalTitle }}</full_title>
@@ -29,6 +29,9 @@
             <resource>{{ .VolumeDoiData.Url }}</resource>
           </doi_data>
         </journal_volume>
+      {{- if .Issue }}
+      <issue>{{ .Issue }}</issue>
+      {{- end }}
       </journal_issue>
     {{- range .Articles }}
       <journal_article publication_type="full_text">

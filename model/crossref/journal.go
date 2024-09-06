@@ -1,18 +1,19 @@
 package crossref
 
 type Journal struct {
-	IssuelessVolumes []IssuelessVolume
-	Head             CrossrefHead
+	JournalVolume []JournalVolume
+	Head          CrossrefHead
 }
 
-type IssuelessVolume struct {
+type JournalVolume struct {
 	JournalTitle   string
+	Issue          string
 	Type           string
 	Number         string
 	Year           int
-	VolumeDoiData  DoiData `xml:"doi_data"`
+	VolumeDoiData  DoiData
 	Articles       []Article
-	JournalDoiData DoiData `xml:"doi_data"`
+	JournalDoiData DoiData
 }
 
 type DoiData struct {
@@ -24,7 +25,7 @@ type Article struct {
 	Title        string
 	Abstract     string
 	Contributors []Contributor
-	DoiData      DoiData `xml:"doi_data"`
+	DoiData      DoiData
 	Year         int
 	References   []Reference
 	LicenseRef   string

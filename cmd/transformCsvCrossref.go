@@ -23,7 +23,9 @@ import (
 var crossrefType,
 	crossrefRegistrant,
 	crossrefDepositorName,
-	crossrefDepositorEmail string
+	crossrefDepositorEmail,
+	journalDoi,
+	journalUrl string
 
 // transformCsvCrossrefCmd represents the transformCsvCrossref command
 var transformCsvCrossrefCmd = &cobra.Command{
@@ -35,7 +37,7 @@ var transformCsvCrossrefCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		if crossrefType != "issueless-journal" {
+		if crossrefType != "journal-volume" && crossrefType != "journal-issue" {
 			slog.Error("Unsupported type", "type", crossrefType)
 			os.Exit(1)
 		}
@@ -56,28 +58,33 @@ var transformCsvCrossrefCmd = &cobra.Command{
 		for _, row := range rows {
 			nodeIDMap[*row.NodeID] = row
 		}
-		var volumes []crossref.IssuelessVolume
+		var volumes []crossref.JournalVolume
 
 		journalDoiData := crossref.DoiData{}
-		for _, id := range strings.Split(*rows[0].Identifier, "|") {
-			if id == "" {
-				continue
-			}
-			var identifier model.TypedText
-			err = json.Unmarshal([]byte(id), &identifier)
-			if err != nil {
-				slog.Error("Unable to unmarshal journal identifier", "err", err)
-				os.Exit(1)
-			}
-			if identifier.Attr0 == "doi" {
-				journalDoiData.Doi = identifier.Value
-				journalDoiData.Url = *rows[0].Url
-				break
+		if journalDoi != "" && journalUrl != "" {
+			journalDoiData.Doi = journalDoi
+			journalDoiData.Url = journalUrl
+		} else {
+			for _, id := range strings.Split(*rows[0].Identifier, "|") {
+				if id == "" {
+					continue
+				}
+				var identifier model.TypedText
+				err = json.Unmarshal([]byte(id), &identifier)
+				if err != nil {
+					slog.Error("Unable to unmarshal journal identifier", "err", err)
+					os.Exit(1)
+				}
+				if identifier.Attr0 == "doi" {
+					journalDoiData.Doi = identifier.Value
+					journalDoiData.Url = *rows[0].Url
+					break
+				}
 			}
 		}
-		for _, row := range rows[1:] {
+		for _, row := range rows {
 			if *row.ObjectModel == "Sub-Collection" {
-				volume := crossref.IssuelessVolume{
+				volume := crossref.JournalVolume{
 					JournalTitle:   *rows[0].Title,
 					JournalDoiData: journalDoiData,
 				}
@@ -102,7 +109,8 @@ var transformCsvCrossrefCmd = &cobra.Command{
 				for _, checkRow := range rows {
 					if *checkRow.ParentCollection == *row.NodeID {
 						first := true
-						year, err := strconv.Atoi(*checkRow.CreationDate)
+						yearStr := strings.Split(*checkRow.CreationDate, "-")[0]
+						year, err := strconv.Atoi(yearStr)
 						if err != nil {
 							slog.Error("Unable to convert year to int", "err", err)
 							os.Exit(1)
@@ -115,7 +123,7 @@ var transformCsvCrossrefCmd = &cobra.Command{
 						if *checkRow.RightsStatement != "" && !strings.Contains(*checkRow.RightsStatement, ".getty") {
 							article.LicenseRef = *checkRow.RightsStatement
 						}
-						if *checkRow.FieldAbstract != "" {
+						if checkRow.FieldAbstract != nil && *checkRow.FieldAbstract != "" {
 							var abstract model.TypedText
 							err = json.Unmarshal([]byte(*checkRow.FieldAbstract), &abstract)
 							if err != nil {
@@ -128,35 +136,37 @@ var transformCsvCrossrefCmd = &cobra.Command{
 								os.Exit(1)
 							}
 						}
-						for _, agent := range strings.Split(*checkRow.LinkedAgent, "|") {
-							components := strings.Split(agent, ":")
-							if len(components) < 3 {
-								continue
-							}
-							if components[2] != "person" {
-								continue
-							}
-							if components[1] == "cre" || components[1] == "aut" {
-								name := strings.Join(components[3:], ":")
-								nameComponents := strings.Split(name, ", ")
-								surname := nameComponents[0]
-								given := ""
-								if len(nameComponents) > 1 {
-									given = strings.Join(nameComponents[1:], ", ")
+						if checkRow.LinkedAgent != nil {
+							for _, agent := range strings.Split(*checkRow.LinkedAgent, "|") {
+								components := strings.Split(agent, ":")
+								if len(components) < 3 {
+									continue
 								}
-								sequence := "additional"
-								if first {
-									first = false
-									sequence = "first"
+								if components[2] != "person" {
+									continue
 								}
-								article.Contributors = append(article.Contributors, crossref.Contributor{
-									Name: crossref.PersonName{
-										Given:   html.EscapeString(given),
-										Surname: html.EscapeString(surname),
-									},
-									Role:     "author",
-									Sequence: sequence,
-								})
+								if components[1] == "cre" || components[1] == "aut" {
+									name := strings.Join(components[3:], ":")
+									nameComponents := strings.Split(name, ", ")
+									surname := nameComponents[0]
+									given := ""
+									if len(nameComponents) > 1 {
+										given = strings.Join(nameComponents[1:], ", ")
+									}
+									sequence := "additional"
+									if first {
+										first = false
+										sequence = "first"
+									}
+									article.Contributors = append(article.Contributors, crossref.Contributor{
+										Name: crossref.PersonName{
+											Given:   html.EscapeString(given),
+											Surname: html.EscapeString(surname),
+										},
+										Role:     "author",
+										Sequence: sequence,
+									})
+								}
 							}
 						}
 						for _, id := range strings.Split(*checkRow.Identifier, "|") {
@@ -188,21 +198,27 @@ var transformCsvCrossrefCmd = &cobra.Command{
 								}
 								if pt.Type == "volume" {
 									volume.Number = pt.Number
+								}
+								if pt.Type == "issue" {
+									volume.Issue = pt.Number
 									break
 								}
 							}
 						}
-
-						for _, doi := range strings.Split(*checkRow.References, "|") {
-							if doi == "" {
-								continue
+						if checkRow.References != nil {
+							for _, doi := range strings.Split(*checkRow.References, "|") {
+								if doi == "" {
+									continue
+								}
+								/* TODO
+								reference := crossref.Reference{
+									crossref.DoiData{
+										Doi: doi,
+									},
+								}
+								article.References = append(article.References, reference)
+								*/
 							}
-							reference := crossref.Reference{
-								crossref.DoiData{
-									Doi: doi,
-								},
-							}
-							article.References = append(article.References, reference)
 						}
 						volume.Articles = append(volume.Articles, article)
 					}
@@ -221,9 +237,10 @@ var transformCsvCrossrefCmd = &cobra.Command{
 				Timestamp: time.Now().Unix(),
 				BatchId:   uuid.New().String(),
 			},
-			IssuelessVolumes: volumes,
+			JournalVolume: volumes,
 		}
-		tmpl, err := template.ParseFiles("crossref/issueless-journal.xml.tmpl")
+		tmplFile := "crossref/journal-volume.xml.tmpl"
+		tmpl, err := template.ParseFiles(tmplFile)
 		if err != nil {
 			slog.Error("Unable to parse template", "err", err)
 			os.Exit(1)
@@ -249,8 +266,11 @@ var transformCsvCrossrefCmd = &cobra.Command{
 func init() {
 	transformCsvCmd.AddCommand(transformCsvCrossrefCmd)
 
-	transformCsvCrossrefCmd.Flags().StringVar(&crossrefType, "type", "issueless-journal", "Crossref type (book, journal, etc.)")
+	transformCsvCrossrefCmd.Flags().StringVar(&crossrefType, "type", "journal-issue", "Crossref type (book, journal-issue, journal-volume, etc.)")
 	transformCsvCrossrefCmd.Flags().StringVar(&crossrefRegistrant, "registrant", "", "registrant")
 	transformCsvCrossrefCmd.Flags().StringVar(&crossrefDepositorName, "depositor-name", "", "Depositor name")
 	transformCsvCrossrefCmd.Flags().StringVar(&crossrefDepositorEmail, "depositor-email", "", "Depositor email")
+	transformCsvCrossrefCmd.Flags().StringVar(&journalDoi, "journal-doi", "", "Journal's DOI")
+	transformCsvCrossrefCmd.Flags().StringVar(&journalUrl, "journal-url", "", "Journal's URL")
+
 }
