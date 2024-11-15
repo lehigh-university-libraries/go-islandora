@@ -114,8 +114,9 @@ func sheetsFields() []CsvColumn {
 		"Catalog or ArchivesSpace URL":        "field_identifier.attr0=uri",
 		"Call Number":                         "field_identifier.attr0=call-number",
 		"Report Number (included only on ATLSS and Fritz Lab spreadsheet)": "field_identifier.attr0=report-number",
-		"Rights Statement": "field_rights",
-		"Access":           "field_access",
+		"Rights Statement":  "field_rights",
+		"Access":            "field_access",
+		"Supplemental File": "supplemental_file",
 	}
 	for column, field := range f {
 		fields = append(fields, CsvColumn{
