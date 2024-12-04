@@ -70,6 +70,7 @@ type SheetsCsv struct {
 	SubjectGeographicLocal                                         *string `csv:"field_geographic_subject.vid=geographic_local" json:"Subject Geographic (Local),omitempty"`
 	SubjectNameLCNAF                                               *string `csv:"field_subjects_name" json:"Subject Name (LCNAF),omitempty"`
 	SubjectTopicLCSH                                               *string `csv:"field_subject_lcsh" json:"Subject Topic (LCSH),omitempty"`
+	SupplementalFile                                               *string `csv:"supplemental_file" json:"Supplemental File,omitempty"`
 	Title                                                          *string `csv:"title" json:"Title,omitempty"`
 	UploadID                                                       *string `csv:"id" json:"Upload ID,omitempty"`
 	Url                                                            *string `csv:"url" json:"Url,omitempty"`
