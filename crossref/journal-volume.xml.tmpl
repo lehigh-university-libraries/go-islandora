@@ -34,6 +34,7 @@
       {{- end }}
       </journal_issue>
     {{- range .Articles }}
+      {{- if .DoiData.Doi }}
       <journal_article publication_type="full_text">
         <titles>
           <title>{{ .Title }}</title>
@@ -71,6 +72,7 @@
           <resource>{{ .DoiData.Url }}</resource>
         </doi_data>
       </journal_article>
+    {{- end }}
     {{- end }}
     </journal>
   {{- end }}
