@@ -23,7 +23,6 @@ type SheetsCsv struct {
 	CaptureDevice                                                  *string `csv:"field_note.attr0=capture-device" json:"Capture Device,omitempty"`
 	CatalogOrArchivesSpaceURL                                      *string `csv:"field_identifier.attr0=uri" json:"Catalog or ArchivesSpace URL,omitempty"`
 	ChildSortOrder                                                 *string `csv:"field_weight" json:"Child Sort Order,omitempty"`
-	Contributor                                                    *string `csv:"field_linked_agent" json:"Contributor,omitempty"`
 	CreationDate                                                   *string `csv:"field_edtf_date_issued" json:"Creation Date,omitempty"`
 	DOI                                                            *string `csv:"field_identifier.attr0=doi" json:"DOI,omitempty"`
 	DateCaptured                                                   *string `csv:"field_edtf_date_captured" json:"Date Captured,omitempty"`
@@ -32,6 +31,7 @@ type SheetsCsv struct {
 	Dimensions                                                     *string `csv:"field_extent.attr0=dimensions" json:"Dimensions,omitempty"`
 	Edition                                                        *string `csv:"field_edition" json:"Edition,omitempty"`
 	EmbargoUntilDate                                               *string `csv:"field_edtf_date_embargo" json:"Embargo Until Date,omitempty"`
+	FieldAbstract                                                  *string `csv:"field_abstract" json:"FieldAbstract,omitempty"`
 	FileFormatMIMEType                                             *string `csv:"field_media_type" json:"File Format (MIME Type),omitempty"`
 	FilePath                                                       *string `csv:"file" json:"File Path,omitempty"`
 	FileSize                                                       *string `csv:"field_extent.attr0=bytes" json:"File Size,omitempty"`
@@ -39,9 +39,11 @@ type SheetsCsv struct {
 	GenreGettyAAT                                                  *string `csv:"field_genre" json:"Genre (Getty AAT),omitempty"`
 	HierarchicalGeographicGettyTGN                                 *string `csv:"field_subject_hierarchical_geo" json:"Hierarchical Geographic (Getty TGN),omitempty"`
 	HumanName                                                      *string `csv:"-" json:"Human Name,omitempty"`
+	Identifier                                                     *string `csv:"field_identifier" json:"Identifier,omitempty"`
 	IssueNumber                                                    *string `csv:"field_part_detail.attr0=issue" json:"Issue Number,omitempty"`
 	Keyword                                                        *string `csv:"field_keywords" json:"Keyword,omitempty"`
 	Language                                                       *string `csv:"field_language" json:"Language,omitempty"`
+	LinkedAgent                                                    *string `csv:"field_linked_agent" json:"LinkedAgent,omitempty"`
 	LocalRestriction                                               *string `csv:"field_local_restriction" json:"Local Restriction,omitempty"`
 	MakePublicYN                                                   *string `csv:"published" json:"Make Public (Y/N),omitempty"`
 	NodeID                                                         *string `csv:"node_id" json:"Node ID,omitempty"`
@@ -51,9 +53,11 @@ type SheetsCsv struct {
 	PageNumbers                                                    *string `csv:"field_part_detail.attr0=page" json:"Page Numbers,omitempty"`
 	PageItemParentID                                               *string `csv:"parent_id" json:"Page/Item Parent ID,omitempty"`
 	ParentCollection                                               *string `csv:"field_member_of" json:"Parent Collection,omitempty"`
+	PartDetail                                                     *string `csv:"field_part_detail" json:"PartDetail,omitempty"`
 	PhysicalFormatGettyAAT                                         *string `csv:"field_physical_form" json:"Physical Format (Getty AAT),omitempty"`
 	PreferredCitationIncludedOnlyInFritzLabAndEnvironmentalReports *string `csv:"field_note.attr0=preferred-citation" json:"Preferred-Citation (included only in Fritz Lab and Environmental reports),omitempty"`
 	Publisher                                                      *string `csv:"field_publisher" json:"Publisher,omitempty"`
+	References                                                     *string `csv:"references" json:"References,omitempty"`
 	RelatedDepartment                                              *string `csv:"field_department_name" json:"Related Department,omitempty"`
 	ReportNumberIncludedOnlyOnATLSSAndFritzLabSpreadsheet          *string `csv:"field_identifier.attr0=report-number" json:"Report Number (included only on ATLSS and Fritz Lab spreadsheet),omitempty"`
 	ResourceType                                                   *string `csv:"field_resource_type" json:"Resource Type,omitempty"`
@@ -69,6 +73,7 @@ type SheetsCsv struct {
 	SupplementalFile                                               *string `csv:"supplemental_file" json:"Supplemental File,omitempty"`
 	Title                                                          *string `csv:"title" json:"Title,omitempty"`
 	UploadID                                                       *string `csv:"id" json:"Upload ID,omitempty"`
+	Url                                                            *string `csv:"url" json:"Url,omitempty"`
 	VolumeNumber                                                   *string `csv:"field_part_detail.attr0=volume" json:"Volume Number,omitempty"`
 }
 
