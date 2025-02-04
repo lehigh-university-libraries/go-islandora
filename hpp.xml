@@ -1,0 +1,209 @@
+<doi_batch xmlns="http://www.crossref.org/schema/5.3.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.3.1" xsi:schemaLocation="http://www.crossref.org/schema/5.3.1 https://data.crossref.org/schemas/crossref5.3.1.xsd" xmlns:jats="http://www.ncbi.nlm.nih.gov/JATS1">
+  <head>
+    <doi_batch_id>e21ede0d-87c5-424a-b42a-ac2b260e8ce7</doi_batch_id>
+    <timestamp>1725636734</timestamp>
+    <depositor>
+      <depositor_name>Lehigh University Libraries</depositor_name>
+      <email_address>inpresrv@lehigh.edu</email_address>
+    </depositor>
+    <registrant>Lehigh University Libraries</registrant>
+  </head>
+  <body>
+    <journal>
+      <journal_metadata language="en">
+        <full_title>Health Policy & Politics (HPP), Volume 1, Issue 1 (2023)</full_title>
+        <doi_data>
+          <doi>10.18275/hpp</doi>
+          <resource>https://preserve.lehigh.edu/lehigh-scholarship/faculty-staff-publications/health-policy-politics-hpp-journal</resource>
+        </doi_data>
+      </journal_metadata>
+      <journal_issue>
+        <publication_date media_type="online">
+          <year>2023</year>
+        </publication_date>
+        <journal_volume>
+          <volume>1</volume>
+          <doi_data>
+            <doi></doi>
+            <resource></resource>
+          </doi_data>
+        </journal_volume>
+      <issue>1</issue>
+      </journal_issue>
+      <journal_article publication_type="full_text">
+        <titles>
+          <title>Title Page</title>
+        </titles>
+        <publication_date media_type="online">
+          <year>2023</year>
+        </publication_date>
+        <doi_data>
+          <doi>10.18275/hpp-v001-i01-001</doi>
+          <resource>https://preserve.lehigh.edu/lehigh-scholarship/faculty-staff-publications/health-policy-politics-hpp-journal/health-policy-0</resource>
+        </doi_data>
+      </journal_article>
+      <journal_article publication_type="full_text">
+        <titles>
+          <title>Introduction the Inaugural Journal by IHPP</title>
+        </titles>
+        <publication_date media_type="online">
+          <year>2023</year>
+        </publication_date>
+        <doi_data>
+          <doi>10.18275/hpp-v001-i01-002</doi>
+          <resource>https://preserve.lehigh.edu/lehigh-scholarship/faculty-staff-publications/health-policy-politics-hpp-journal/health-policy-1</resource>
+        </doi_data>
+      </journal_article>
+      <journal_article publication_type="full_text">
+        <titles>
+          <title>Table of Contents</title>
+        </titles>
+        <contributors>
+          <person_name sequence="first" contributor_role="author">
+            <given_name>Elizabeth A.</given_name>
+            <surname>Dolan</surname>
+          </person_name>
+        </contributors>
+        <publication_date media_type="online">
+          <year>2023</year>
+        </publication_date>
+        <doi_data>
+          <doi>10.18275/hpp-v001-i01-003</doi>
+          <resource>https://preserve.lehigh.edu/lehigh-scholarship/faculty-staff-publications/health-policy-politics-hpp-journal/health-policy-2</resource>
+        </doi_data>
+      </journal_article>
+      <journal_article publication_type="full_text">
+        <titles>
+          <title>China&#39;s Healthcare Systems - A Status Update from the 2009 Major Health Care Reform</title>
+        </titles>
+        <contributors>
+          <person_name sequence="first" contributor_role="author">
+            <given_name>Cheryl</given_name>
+            <surname>Qin</surname>
+            <affiliations>
+              <institution>
+                <institution_name>Lehigh University</institution_name>
+              </institution>
+            </affiliations>
+          </person_name>
+          <person_name sequence="additional" contributor_role="author">
+            <given_name>Michael</given_name>
+            <surname>Gusmano</surname>
+            <affiliations>
+              <institution>
+                <institution_name>Lehigh University</institution_name>
+              </institution>
+            </affiliations>
+            <ORCID>https://orcid.org/0000-0002-2337-3067</ORCID>
+          </person_name>
+        </contributors>
+        <publication_date media_type="online">
+          <year>2023</year>
+        </publication_date>
+        <doi_data>
+          <doi>10.18275/hpp-v001-i01-004</doi>
+          <resource>https://preserve.lehigh.edu/lehigh-scholarship/faculty-staff-publications/health-policy-politics-hpp-journal/health-policy-3</resource>
+        </doi_data>
+      </journal_article>
+      <journal_article publication_type="full_text">
+        <titles>
+          <title>Healthcare and Political Obstacles in the Way of Quality Healthcare</title>
+        </titles>
+        <contributors>
+          <person_name sequence="first" contributor_role="author">
+            <given_name>Sameen</given_name>
+            <surname>Basha</surname>
+            <affiliations>
+              <institution>
+                <institution_name>Lehigh University</institution_name>
+              </institution>
+            </affiliations>
+          </person_name>
+        </contributors>
+        <publication_date media_type="online">
+          <year>2023</year>
+        </publication_date>
+        <doi_data>
+          <doi>10.18275/hpp-v001-i01-005</doi>
+          <resource>https://preserve.lehigh.edu/lehigh-scholarship/faculty-staff-publications/health-policy-politics-hpp-journal/health-policy-4</resource>
+        </doi_data>
+      </journal_article>
+      <journal_article publication_type="full_text">
+        <titles>
+          <title>The Effects of Continued Enrollment in the Children&#39;s Health Insurance Program on Health and Educational Outcomes</title>
+        </titles>
+        <contributors>
+          <person_name sequence="first" contributor_role="author">
+            <given_name>Xiaohui</given_name>
+            <surname>Guo</surname>
+            <affiliations>
+              <institution>
+                <institution_name>Capital University of Economics and Business</institution_name>
+              </institution>
+            </affiliations>
+            <ORCID>https://orcid.org/0000-0002-8738-1138</ORCID>
+          </person_name>
+          <person_name sequence="additional" contributor_role="author">
+            <given_name>Chad</given_name>
+            <surname>Meyerhoefer</surname>
+            <affiliations>
+              <institution>
+                <institution_name>Lehigh University</institution_name>
+              </institution>
+            </affiliations>
+            <ORCID>https://orcid.org/0000-0002-6965-3726</ORCID>
+          </person_name>
+          <person_name sequence="additional" contributor_role="author">
+            <given_name>Lizhong</given_name>
+            <surname>Peng</surname>
+            <affiliations>
+              <institution>
+                <institution_name>University of West Georgia</institution_name>
+              </institution>
+            </affiliations>
+          </person_name>
+        </contributors>
+        <publication_date media_type="online">
+          <year>2023</year>
+        </publication_date>
+        <doi_data>
+          <doi>10.18275/hpp-v001-i01-006</doi>
+          <resource>https://preserve.lehigh.edu/lehigh-scholarship/faculty-staff-publications/health-policy-politics-hpp-journal/health-policy-5</resource>
+        </doi_data>
+      </journal_article>
+      <journal_article publication_type="full_text">
+        <titles>
+          <title>The Commercial Determinants of Health in the Context of COVID 19</title>
+        </titles>
+        <contributors>
+          <person_name sequence="first" contributor_role="author">
+            <given_name>Eduardo J.</given_name>
+            <surname>Gómez</surname>
+            <affiliations>
+              <institution>
+                <institution_name>Lehigh University</institution_name>
+              </institution>
+            </affiliations>
+            <ORCID>https://orcid.org/0000-0001-5053-5087</ORCID>
+          </person_name>
+          <person_name sequence="additional" contributor_role="author">
+            <given_name>Lanie</given_name>
+            <surname>Fenster</surname>
+            <affiliations>
+              <institution>
+                <institution_name>Lehigh University</institution_name>
+              </institution>
+            </affiliations>
+          </person_name>
+        </contributors>
+        <publication_date media_type="online">
+          <year>2023</year>
+        </publication_date>
+        <doi_data>
+          <doi>10.18275/hpp-v001-i01-007</doi>
+          <resource>https://preserve.lehigh.edu/lehigh-scholarship/faculty-staff-publications/health-policy-politics-hpp-journal/health-policy-6</resource>
+        </doi_data>
+      </journal_article>
+    </journal>
+  </body>
+</doi_batch>

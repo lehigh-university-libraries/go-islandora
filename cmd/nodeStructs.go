@@ -273,6 +273,7 @@ func nodeFields() []DrupalField {
 		"status":             "boolean",
 		"created":            "string",
 		"changed":            "string",
+		"url":                "string",
 	}
 	for fieldName, fieldType := range f {
 		fields = append(fields, DrupalField{
