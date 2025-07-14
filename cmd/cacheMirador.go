@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"os"
 	"sync"
 	"time"
 
@@ -103,13 +104,12 @@ func warmURL(ctx context.Context, url string) error {
 			(function($) {
 					const id = $('.block-mirador[data-once*="mirador-viewer"]').attr('id');
 					if (id == undefined) return false;
-					const state = Drupal.IslandoraMirador.instances['#' + id].store.getState()
+					const state = Drupal.IslandoraMirador.instances['#' + id].store.getState();
 					if (!state.manifests || Object.keys(state.manifests).length === 0) return false;
 					if (!state.windows || Object.keys(state.windows).length === 0) return false;
 					const windows = Object.values(state.windows);
 					return windows.some(window => window.canvasId && window.manifestId);
-			})(jQuery)
-        `, nil),
+			})(jQuery);`, nil),
 	}
 
 	if err := chromedp.Run(localCtx, tasks); err != nil {
@@ -122,6 +122,10 @@ func warmURL(ctx context.Context, url string) error {
 func init() {
 	cacheMirador.Flags().StringVar(&endpoint, "endpoint", "", "Remote JSON endpoint returning array of {url: ...} (required)")
 	cacheMirador.Flags().IntVar(&workers, "workers", 2, "Number of concurrent workers")
-	cacheMirador.MarkFlagRequired("endpoint")
+	err := cacheMirador.MarkFlagRequired("endpoint")
+	if err != nil {
+		slog.Error("Unable to mark endpoint flag as required for cache-mirador command")
+		os.Exit(1)
+	}
 	rootCmd.AddCommand(cacheMirador)
 }
