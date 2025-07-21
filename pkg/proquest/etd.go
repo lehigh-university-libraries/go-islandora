@@ -154,6 +154,9 @@ func extractEmbargoDate(restriction DISSRepository) string {
 	if restriction.Embargo == "" {
 		return ""
 	}
+	if strings.ToLower(restriction.Embargo) == "never" {
+		return "2999-12-31"
+	}
 	embargo := strings.Split(restriction.Embargo, " ")[0]
 	_, err := time.Parse("2006-01-02", embargo)
 	if err != nil {
