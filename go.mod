@@ -1,8 +1,6 @@
 module github.com/lehigh-university-libraries/go-islandora
 
-go 1.23.0
-
-toolchain go1.24.5
+go 1.24.5
 
 require (
 	github.com/chromedp/chromedp v0.13.7
