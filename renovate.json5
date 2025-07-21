@@ -1,0 +1,36 @@
+{
+  extends: [
+    'config:best-practices',
+    ':rebaseStalePrs',
+  ],
+  packageRules: [
+    {
+      matchUpdateTypes: [
+        'minor',
+        'patch',
+        'digest',
+      ],
+      groupName: 'all non-major dependencies',
+      matchPackageNames: [
+        '*',
+      ],
+    },
+    {
+      matchUpdateTypes: [
+        'major',
+      ],
+      groupName: 'all major updates',
+      matchPackageNames: [
+        '*',
+      ],
+    },
+  ],
+  labels: [
+    'dependencies',
+  ],
+  osvVulnerabilityAlerts: true,
+  dependencyDashboardOSVVulnerabilitySummary: 'unresolved',
+  vulnerabilityAlerts: {
+    enabled: true,
+  },
+}
