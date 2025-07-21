@@ -19,10 +19,11 @@
       matchUpdateTypes: [
         'major',
       ],
-      groupName: 'all major updates',
+      groupName: null,
       matchPackageNames: [
         '*',
       ],
+      prConcurrentLimit: 1,
     },
   ],
   labels: [
