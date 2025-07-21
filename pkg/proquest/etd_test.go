@@ -12,6 +12,22 @@ func TestEmbargoDate(t *testing.T) {
 		description    string
 	}{
 		{
+			name: "Indefinite embargo",
+			submission: DISSSubmission{
+				EmbargoCode: 0,
+				Description: DISSDescription{
+					Dates: DISSDates{
+						CompletionDate: "2021-05",
+					},
+				},
+				Repository: DISSRepository{
+					Embargo: "NEVER DELIVER",
+				},
+			},
+			expectedResult: "2999-12-31",
+			description:    "When embargo is set to never deliver, should return Lehigh's special indefinite embargo date",
+		},
+		{
 			name: "No embargo - code 0",
 			submission: DISSSubmission{
 				EmbargoCode: 0,
