@@ -29,6 +29,9 @@
     'dependencies',
   ],
   osvVulnerabilityAlerts: true,
+  postUpdateOptions: [
+    'gomodTidy',
+  ],
   dependencyDashboardOSVVulnerabilitySummary: 'unresolved',
   vulnerabilityAlerts: {
     enabled: true,
