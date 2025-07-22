@@ -1,40 +1,7 @@
 {
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: [
-    'config:best-practices',
-    ':rebaseStalePrs',
+    'github>lehigh-university-libraries/renovate-config',
+    'github>lehigh-university-libraries/renovate-config:weeklyBump.json5',
   ],
-  packageRules: [
-    {
-      matchUpdateTypes: [
-        'minor',
-        'patch',
-        'digest',
-      ],
-      groupName: 'all non-major dependencies',
-      matchPackageNames: [
-        '*',
-      ],
-    },
-    {
-      matchUpdateTypes: [
-        'major',
-      ],
-      groupName: null,
-      matchPackageNames: [
-        '*',
-      ],
-      prConcurrentLimit: 1,
-    },
-  ],
-  labels: [
-    'dependencies',
-  ],
-  osvVulnerabilityAlerts: true,
-  postUpdateOptions: [
-    'gomodTidy',
-  ],
-  dependencyDashboardOSVVulnerabilitySummary: 'unresolved',
-  vulnerabilityAlerts: {
-    enabled: true,
-  },
 }
