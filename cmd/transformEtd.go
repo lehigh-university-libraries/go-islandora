@@ -149,11 +149,6 @@ func processZip(uploadId int, zipPath string, writer *csv.Writer) error {
 		return fmt.Errorf("failed to decode XML: %w", err)
 	}
 
-	embargoUntil := extractEmbargoDate(submission.Restriction)
-	if embargoUntil == "" {
-		embargoUntil = computeEmbargoDate(submission.EmbargoCode, submission.Description.Dates.CompletionDate)
-	}
-
 	// Format keywords
 	var keywords []string
 	for _, keyword := range submission.Description.Categorization.Keywords {
@@ -203,7 +198,7 @@ func processZip(uploadId int, zipPath string, writer *csv.Writer) error {
 		"Text",
 		genre,
 		year.Format("2006"),
-		embargoUntil,
+		submission.EmbargoDate(),
 		language,
 		"application/pdf",
 		"born digital",
@@ -221,45 +216,6 @@ func processZip(uploadId int, zipPath string, writer *csv.Writer) error {
 	writer.Flush()
 
 	return nil
-}
-
-func computeEmbargoDate(embargoCode int, completionDate string) string {
-	if embargoCode == 0 {
-		return ""
-	}
-
-	year, err := time.Parse("2006-01", completionDate)
-	if err != nil {
-		slog.Error("Invalid completion year format", "date", completionDate, "error", err)
-		return ""
-	}
-
-	var embargoDuration time.Duration
-	switch embargoCode {
-	case 1:
-		embargoDuration = 6 * 30 * 24 * time.Hour
-	case 2:
-		embargoDuration = 12 * 30 * 24 * time.Hour
-	case 3:
-		embargoDuration = 12 * 30 * 24 * time.Hour
-	}
-
-	embargoDate := year.Add(embargoDuration)
-	return embargoDate.Format("2006-01-02") // Format as mm/dd/yyyy
-}
-
-// extractEmbargoDate extracts the embargo removal date if present in the XML
-func extractEmbargoDate(restriction proquest.DISSRestriction) string {
-	if restriction.SalesRestriction.Remove != "" {
-		parsedDate, err := time.Parse("01/02/2006", restriction.SalesRestriction.Remove)
-		if err != nil {
-			slog.Error("Invalid embargo removal date format", "date", restriction.SalesRestriction.Remove, "error", err)
-			return ""
-		}
-		return parsedDate.Format("2006-01-02")
-	}
-
-	return ""
 }
 
 func getContributors(submission proquest.DISSSubmission) string {

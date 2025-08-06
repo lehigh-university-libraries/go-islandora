@@ -2,6 +2,9 @@ package proquest
 
 import (
 	"encoding/xml"
+	"log/slog"
+	"strings"
+	"time"
 )
 
 type DISSSubmission struct {
@@ -9,16 +12,15 @@ type DISSSubmission struct {
 	EmbargoCode int             `xml:"embargo_code,attr"`
 	Authorship  DISSEAuthorship `xml:"DISS_authorship"`
 	Description DISSDescription `xml:"DISS_description"`
-	Restriction DISSRestriction `xml:"DISS_restriction"`
+	Repository  DISSRepository  `xml:"DISS_repository"`
 	Content     DISSContent     `xml:"DISS_content"`
 }
 
-type DISSRestriction struct {
-	SalesRestriction DISSSalesRestriction `xml:"DISS_sales_restriction"`
-}
-
-type DISSSalesRestriction struct {
-	Remove string `xml:"remove,attr"`
+type DISSRepository struct {
+	// from ProQuest
+	// DISS_delayed_release indicates the length of embargo that the author has selected for the university repository.
+	// DISS_sales_restriction indicates the length of embargo that the author has selected for ProQuest.
+	Embargo string `xml:"DISS_delayed_release"`
 }
 
 type DISSEAuthorship struct {
@@ -111,4 +113,56 @@ type DISSAbstract struct {
 type DISSBinary struct {
 	Type     string `xml:"type,attr"`
 	FileName string `xml:",chardata"`
+}
+
+func (submission DISSSubmission) EmbargoDate() string {
+	embargoUntil := extractEmbargoDate(submission.Repository)
+	if embargoUntil == "" {
+		embargoUntil = computeEmbargoDate(submission.EmbargoCode, submission.Description.Dates.CompletionDate)
+	}
+
+	return embargoUntil
+}
+
+func computeEmbargoDate(embargoCode int, completionDate string) string {
+	if embargoCode == 0 {
+		return ""
+	}
+
+	year, err := time.Parse("2006-01", completionDate)
+	if err != nil {
+		slog.Error("Invalid completion year format", "date", completionDate, "error", err)
+		return ""
+	}
+
+	var embargoDuration time.Duration
+	switch embargoCode {
+	case 1:
+		embargoDuration = 6 * 30 * 24 * time.Hour
+	case 2:
+		embargoDuration = 12 * 30 * 24 * time.Hour
+	case 3:
+		embargoDuration = 12 * 30 * 24 * time.Hour
+	}
+
+	embargoDate := year.Add(embargoDuration)
+	return embargoDate.Format("2006-01-02") // Format as mm/dd/yyyy
+}
+
+// extractEmbargoDate extracts the embargo removal date if present in the XML
+func extractEmbargoDate(restriction DISSRepository) string {
+	if restriction.Embargo == "" {
+		return ""
+	}
+	if strings.ToLower(restriction.Embargo) == "never deliver" {
+		return "2999-12-31"
+	}
+	embargo := strings.Split(restriction.Embargo, " ")[0]
+	_, err := time.Parse("2006-01-02", embargo)
+	if err != nil {
+		slog.Error("Invalid embargo removal date format", "date", restriction.Embargo, "error", err)
+		return ""
+	}
+
+	return embargo
 }
