@@ -3,3 +3,4 @@ workbench.yaml
 output.json
 go-islandora
 islandora-starter-site
+*.xml

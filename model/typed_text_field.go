@@ -24,6 +24,15 @@ func (field *TypedText) String() string {
 	return string(data)
 }
 
+func (field *TypedTextField) String() string {
+	values := make([]string, len(*field))
+	for i, field := range *field {
+		values[i] = field.String()
+	}
+
+	return strings.Join(values, "|")
+}
+
 func (field TypedTextField) MarshalCSV() (string, error) {
 	values := make([]string, len(field))
 	for i, field := range field {

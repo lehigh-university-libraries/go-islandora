@@ -21,6 +21,15 @@ func (field EntityReferenceField) MarshalCSV() (string, error) {
 	return strings.Join(values, "|"), nil
 }
 
+func (field *EntityReferenceField) String() string {
+	values := make([]string, len(*field))
+	for i, field := range *field {
+		values[i] = field.String()
+	}
+
+	return strings.Join(values, "|")
+}
+
 func (field *EntityReferenceField) UnmarshalCSV(csv string) error {
 	values := strings.Split(csv, "|")
 	s := make([]EntityReference, len(values))
