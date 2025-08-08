@@ -90,7 +90,7 @@ var exportCrossref = &cobra.Command{
 				}
 				volume.VolumeDoiData = crossref.DoiData{
 					Doi: id.Value,
-					Url: fmt.Sprintf("%s/node/%d", baseUrl, currentNid),
+					Url: fmt.Sprintf("%s/node/%s", baseUrl, currentNid),
 				}
 			}
 			currentNidInt, err := strconv.Atoi(currentNid)
@@ -150,7 +150,7 @@ var exportCrossref = &cobra.Command{
 					}
 					article.DoiData = crossref.DoiData{
 						Doi: id.Value,
-						Url: fmt.Sprintf("%s/node/%d", baseUrl, currentNid),
+						Url: fmt.Sprintf("%s/node/%s", baseUrl, currentNid),
 					}
 					break
 				}

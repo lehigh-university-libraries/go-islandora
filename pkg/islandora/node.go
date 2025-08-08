@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -74,7 +75,10 @@ func FetchMembers(url string) ([]Nid, error) {
 	// Cache the result
 	if err := ensureCacheDir(); err == nil {
 		if data, err := json.Marshal(nids); err == nil {
-			os.WriteFile(cacheFile, data, 0644)
+			err = os.WriteFile(cacheFile, data, 0644)
+			if err != nil {
+				slog.Error("Unable to write file", "file", cacheFile, "err", err)
+			}
 		}
 	}
 
@@ -116,7 +120,10 @@ func FetchNode(url string) (*api.IslandoraObject, error) {
 	// Cache the result
 	if err := ensureCacheDir(); err == nil {
 		if data, err := json.Marshal(obj); err == nil {
-			os.WriteFile(cacheFile, data, 0644)
+			err = os.WriteFile(cacheFile, data, 0644)
+			if err != nil {
+				slog.Error("Unable to write file", "file", cacheFile, "err", err)
+			}
 		}
 	}
 

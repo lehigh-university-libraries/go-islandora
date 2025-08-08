@@ -10,15 +10,8 @@ import (
 )
 
 var (
-	nid          int
-	csvFile      string
-	parentModels = []string{
-		"Collection",
-		"Compound Object",
-		"Paged Content",
-		"Publication Issue",
-		"Sub-Collection",
-	}
+	nid     int
+	csvFile string
 )
 
 // Custom type for sorting rows
