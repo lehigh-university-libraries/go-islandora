@@ -1,8 +1,11 @@
 package crossref
 
 type Journal struct {
-	JournalVolume []JournalVolume
-	Head          CrossrefHead
+	JournalVolume  []JournalVolume
+	Head           CrossrefHead
+	Articles       []Article
+	JournalTitle   string
+	JournalDoiData DoiData
 }
 
 type JournalVolume struct {

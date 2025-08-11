@@ -9,7 +9,7 @@
     <registrant>{{ .Head.Registrant }}</registrant>
   </head>
   <body>
-  {{- range .JournalVolume }}
+    {{- range .JournalVolume }}
     <journal>
       <journal_metadata language="en">
         <full_title>{{ .JournalTitle }}</full_title>
@@ -29,41 +29,41 @@
             <resource>{{ .VolumeDoiData.Url }}</resource>
           </doi_data>
         </journal_volume>
-      {{- if .Issue }}
-      <issue>{{ .Issue }}</issue>
-      {{- end }}
+        {{- if .Issue }}
+        <issue>{{ .Issue }}</issue>
+        {{- end }}
       </journal_issue>
-    {{- range .Articles }}
+      {{- range .Articles }}
       {{- if .DoiData.Doi }}
       <journal_article publication_type="full_text">
         <titles>
           <title>{{ .Title }}</title>
         </titles>
-      {{- if .Contributors }}
+        {{- if .Contributors }}
         <contributors>
-        {{- range .Contributors }}
+          {{- range .Contributors }}
           <person_name sequence="{{ .Sequence }}" contributor_role="{{ .Role }}">
-          {{- if .Name.Given }}
+            {{- if .Name.Given }}
             <given_name>{{ .Name.Given }}</given_name>
-          {{- end }}
+            {{- end }}
             <surname>{{ .Name.Surname }}</surname>
-          {{- if .Name.Institution }}
+            {{- if .Name.Institution }}
             <affiliations>
               <institution>
                 <institution_name>{{ .Name.Institution }}</institution_name>
               </institution>
             </affiliations>
-          {{- end }}
-          {{- if .Name.ORCID }}
+            {{- end }}
+            {{- if .Name.ORCID }}
             <ORCID>{{ .Name.ORCID }}</ORCID>
-          {{- end }}
+            {{- end }}
           </person_name>
           {{- if .Organization }}
           <organization sequence="additional" contributor_role="{{ .Role }}">{{ .Organization }}</organization>
           {{- end }}
-        {{- end }}
+          {{- end }}
         </contributors>
-      {{- end }}
+        {{- end }}
         <publication_date media_type="online">
           <year>{{ .Year }}</year>
         </publication_date>
@@ -72,9 +72,59 @@
           <resource>{{ .DoiData.Url }}</resource>
         </doi_data>
       </journal_article>
-    {{- end }}
-    {{- end }}
+      {{- end }}
+      {{- end }}
     </journal>
-  {{- end }}
+    {{- end }}
+    {{- range .Articles }}
+    <journal>
+      <journal_metadata language="en">
+        <full_title>{{ $.JournalTitle }}</full_title>
+        <doi_data>
+          <doi>{{ $.JournalDoiData.Doi }}</doi>
+          <resource>{{ $.JournalDoiData.Url }}</resource>
+        </doi_data>
+      </journal_metadata>
+      {{- if .DoiData.Doi }}
+      <journal_article publication_type="full_text">
+        <titles>
+          <title>{{ .Title }}</title>
+        </titles>
+        {{- if .Contributors }}
+        <contributors>
+          {{- range .Contributors }}
+          <person_name sequence="{{ .Sequence }}" contributor_role="{{ .Role }}">
+            {{- if .Name.Given }}
+            <given_name>{{ .Name.Given }}</given_name>
+            {{- end }}
+            <surname>{{ .Name.Surname }}</surname>
+            {{- if .Name.Institution }}
+            <affiliations>
+              <institution>
+                <institution_name>{{ .Name.Institution }}</institution_name>
+              </institution>
+            </affiliations>
+            {{- end }}
+            {{- if .Name.ORCID }}
+            <ORCID>{{ .Name.ORCID }}</ORCID>
+            {{- end }}
+          </person_name>
+          {{- if .Organization }}
+          <organization sequence="additional" contributor_role="{{ .Role }}">{{ .Organization }}</organization>
+          {{- end }}
+          {{- end }}
+        </contributors>
+        {{- end }}
+        <publication_date media_type="online">
+          <year>{{ .Year }}</year>
+        </publication_date>
+        <doi_data>
+          <doi>{{ .DoiData.Doi }}</doi>
+          <resource>{{ .DoiData.Url }}</resource>
+        </doi_data>
+      </journal_article>
+      {{- end }}
+    </journal>
+    {{- end }}
   </body>
 </doi_batch>

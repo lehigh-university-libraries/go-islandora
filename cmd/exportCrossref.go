@@ -52,6 +52,7 @@ var exportCrossref = &cobra.Command{
 
 		var (
 			volumes     []crossref.JournalVolume
+			articles    []crossref.Article
 			journalNode *api.IslandoraObject
 		)
 
@@ -90,6 +91,7 @@ var exportCrossref = &cobra.Command{
 			Url: journalUrl,
 		}
 
+		// Second pass: find volume nodes (direct children of journal)
 		for _, node := range nodes {
 			currentNid, err := node.Nid.MarshalCSV()
 			if err != nil {
@@ -115,9 +117,109 @@ var exportCrossref = &cobra.Command{
 				continue
 			}
 
+			// Check if this volume node has any children (articles)
+			hasChildren := false
+			for _, childNode := range nodes {
+				if childNode.FieldMemberOf != nil {
+					for _, parent := range *childNode.FieldMemberOf {
+						if parent.TargetId == currentNidInt {
+							hasChildren = true
+							break
+						}
+					}
+				}
+				if hasChildren {
+					break
+				}
+			}
+
+			// If volume has no children AND has article-like content, treat as direct article
+			if !hasChildren && node.FieldFullTitle != nil && node.FieldFullTitle.String() != "" {
+				// Extract year from volume node's date
+				var articleYear int
+				if node.FieldEdtfDateIssued != nil {
+					for _, d := range *node.FieldEdtfDateIssued {
+						yearStr := strings.Split(d.Value, "-")[0]
+						year, err := strconv.Atoi(yearStr)
+						if err == nil {
+							articleYear = year
+						}
+						break
+					}
+				}
+
+				article := crossref.Article{
+					Title: html.EscapeString(node.FieldFullTitle.String()),
+					Year:  articleYear,
+				}
+
+				// Extract rights/license
+				if node.FieldRights != nil {
+					rights := (*node.FieldRights)
+					if len(rights) > 0 && !strings.Contains(rights[0].String(), ".getty") {
+						article.LicenseRef = rights[0].String()
+					}
+				}
+
+				// Extract abstract
+				abstract := node.FieldAbstract.String()
+				if abstract != "" {
+					article.Abstract, err = crossref.StrToJATS(abstract)
+					if err != nil {
+						slog.Error("Unable to convert abstract to JATS", "err", err)
+						os.Exit(1)
+					}
+				}
+
+				// Extract contributors
+				first := true
+				if node.FieldLinkedAgent != nil {
+					for _, agent := range *node.FieldLinkedAgent {
+						if agent.RelType == "relators:cre" || agent.RelType == "relators:aut" {
+							url := fmt.Sprintf("%s%s?_format=json", baseUrl, agent.Url)
+							article.Contributors = append(article.Contributors, crossref.GetContributor(url, first))
+							if first {
+								first = false
+							}
+						}
+					}
+				}
+
+				// Extract article DOI
+				if node.FieldIdentifier != nil {
+					for _, id := range *node.FieldIdentifier {
+						if id.Attr0 == "doi" && id.Value != "" {
+							article.DoiData = crossref.DoiData{
+								Doi: id.Value,
+								Url: fmt.Sprintf("%s/node/%s", baseUrl, currentNid),
+							}
+							break
+						}
+					}
+				}
+
+				articles = append(articles, article)
+				slog.Info("Processed volume as direct article", "nid", currentNid, "title", article.Title)
+				continue
+			}
+
+			// Otherwise, process as normal volume with potential children
+			var volumeYear int
+			if node.FieldEdtfDateIssued != nil {
+				for _, d := range *node.FieldEdtfDateIssued {
+					yearStr := strings.Split(d.Value, "-")[0]
+					year, err := strconv.Atoi(yearStr)
+					if err == nil {
+						volumeYear = year
+					}
+					break
+				}
+			}
+
 			volume := crossref.JournalVolume{
 				JournalTitle:   journalTitle,
 				JournalDoiData: journalDoiData,
+				Year:           volumeYear,
 			}
 
 			// Extract volume DOI
@@ -144,13 +246,8 @@ var exportCrossref = &cobra.Command{
 			}
 
 			// Third pass: find articles that belong to this volume
-			var volumeYear int
 			for _, childNode := range nodes {
 				childNidStr, err := childNode.Nid.MarshalCSV()
-				if err != nil {
-					continue
-				}
-				_, err = strconv.Atoi(childNidStr)
 				if err != nil {
 					continue
 				}
@@ -176,16 +273,18 @@ var exportCrossref = &cobra.Command{
 				}
 
 				// Extract year from article's date
-				if childNode.FieldEdtfDateIssued != nil {
+				if volumeYear == 0 && childNode.FieldEdtfDateIssued != nil {
 					for _, d := range *childNode.FieldEdtfDateIssued {
 						yearStr := strings.Split(d.Value, "-")[0]
 						year, err := strconv.Atoi(yearStr)
 						if err == nil {
 							article.Year = year
-							volumeYear = year
+							volume.Year = year
 						}
 						break
 					}
+				} else {
+					article.Year = volumeYear
 				}
 
 				// Extract rights/license
@@ -211,7 +310,8 @@ var exportCrossref = &cobra.Command{
 				if childNode.FieldLinkedAgent != nil {
 					for _, agent := range *childNode.FieldLinkedAgent {
 						if agent.RelType == "relators:cre" || agent.RelType == "relators:aut" {
-							article.Contributors = append(article.Contributors, crossref.GetContributor(agent.String(), first))
+							url := fmt.Sprintf("%s%s?_format=json", baseUrl, agent.Url)
+							article.Contributors = append(article.Contributors, crossref.GetContributor(url, first))
 							if first {
 								first = false
 							}
@@ -225,7 +325,7 @@ var exportCrossref = &cobra.Command{
 						if id.Attr0 == "doi" && id.Value != "" {
 							article.DoiData = crossref.DoiData{
 								Doi: id.Value,
-								Url: fmt.Sprintf("%s/node/%s", baseUrl, childNidStr), // Use child's nid, not volume's
+								Url: fmt.Sprintf("%s/node/%s", baseUrl, childNidStr),
 							}
 							break
 						}
@@ -235,12 +335,13 @@ var exportCrossref = &cobra.Command{
 				volume.Articles = append(volume.Articles, article)
 			}
 
-			// Set the volume year
-			volume.Year = volumeYear
-
-			volumes = append(volumes, volume)
+			if len(volume.Articles) > 0 {
+				volumes = append(volumes, volume)
+				slog.Info("Processed volume with articles", "nid", currentNid, "articles", len(volume.Articles))
+			}
 		}
 
+		// Create the journal data structure
 		journalData := crossref.Journal{
 			Head: crossref.CrossrefHead{
 				Registrant: crossrefRegistrant,
@@ -251,7 +352,10 @@ var exportCrossref = &cobra.Command{
 				Timestamp: time.Now().Unix(),
 				BatchId:   uuid.New().String(),
 			},
-			JournalVolume: volumes,
+			JournalVolume:  volumes,
+			Articles:       articles, // Direct articles (volumes with no children)
+			JournalTitle:   journalTitle,
+			JournalDoiData: journalDoiData,
 		}
 
 		tmplFile := "crossref/journal-volume.xml.tmpl"
@@ -274,7 +378,7 @@ var exportCrossref = &cobra.Command{
 			os.Exit(1)
 		}
 
-		slog.Info("Crossref journal written", "file", target)
+		slog.Info("Crossref journal written", "file", target, "volumes", len(volumes), "direct_articles", len(articles))
 	},
 }
 
