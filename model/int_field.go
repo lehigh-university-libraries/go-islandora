@@ -18,6 +18,14 @@ func (field IntField) MarshalCSV() (string, error) {
 	return strings.Join(values, "|"), nil
 }
 
+func (field IntField) String() string {
+	values := make([]string, len(field))
+	for i, field := range field {
+		values[i] = field.String()
+	}
+	return strings.Join(values, "|")
+}
+
 func (field *IntField) UnmarshalCSV(csv string) error {
 	values := strings.Split(csv, "|")
 	s := make([]Int, len(values))

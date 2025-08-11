@@ -11,12 +11,21 @@ type Generic struct {
 	Value     string `json:"value"`
 }
 
-func (field GenericField) MarshalCSV() (string, error) {
+func (field GenericField) MarshalCSV() string {
 	values := make([]string, len(field))
 	for i, field := range field {
 		values[i] = field.String()
 	}
-	return strings.Join(values, "|"), nil
+	return strings.Join(values, "|")
+}
+
+func (field *GenericField) String() string {
+	values := make([]string, len(*field))
+	for i, field := range *field {
+		values[i] = field.String()
+	}
+
+	return strings.Join(values, "|")
 }
 
 func (field *GenericField) UnmarshalCSV(csv string) error {
