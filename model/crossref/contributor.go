@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"strings"
@@ -30,6 +31,7 @@ type PersonName struct {
 }
 
 func GetContributor(name string, first bool) Contributor {
+	slog.Info("CONTRI", "name", name)
 	contributor := Contributor{
 		Role: "author",
 	}

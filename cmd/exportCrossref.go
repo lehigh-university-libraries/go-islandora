@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lehigh-university-libraries/go-islandora/api"
 	"github.com/lehigh-university-libraries/go-islandora/model/crossref"
 	"github.com/lehigh-university-libraries/go-islandora/pkg/islandora"
 	"github.com/spf13/cobra"
@@ -50,111 +51,88 @@ var exportCrossref = &cobra.Command{
 		}
 
 		var (
-			volumes []crossref.JournalVolume
+			volumes     []crossref.JournalVolume
+			journalNode *api.IslandoraObject
 		)
+
+		// First pass: find the journal node and extract journal metadata
 		for _, node := range nodes {
-			if journalDoi == "" || journalUrl == "" {
-				for _, id := range *node.FieldIdentifier {
-					if id.Attr0 != "doi" || id.Value == "" {
-						continue
-					}
+			if node.Nid.String() == strconv.Itoa(nid) {
+				journalNode = node
+				break
+			}
+		}
+
+		if journalNode == nil {
+			slog.Error("Journal node not found", "nid", nid)
+			os.Exit(1)
+		}
+
+		// Extract journal metadata
+		if journalDoi == "" || journalUrl == "" {
+			for _, id := range *journalNode.FieldIdentifier {
+				if id.Attr0 == "doi" && id.Value != "" {
 					journalDoi = id.Value
 					journalUrl = fmt.Sprintf("%s/node/%d", baseUrl, nid)
 					break
 				}
-				if journalDoi == "" || journalUrl == "" {
-					slog.Error("Unable to find journal DOI or URL")
-					os.Exit(1)
-				}
-				journalTitle = node.Title.String()
-				slog.Info("Got journal DOI and url", "doi", journalDoi, "url", journalUrl, "title", journalTitle)
+			}
+			if journalDoi == "" || journalUrl == "" {
+				slog.Error("Unable to find journal DOI or URL")
+				os.Exit(1)
+			}
+			journalTitle = journalNode.Title.String()
+			slog.Info("Got journal DOI and url", "doi", journalDoi, "url", journalUrl, "title", journalTitle)
+		}
+
+		journalDoiData := crossref.DoiData{
+			Doi: journalDoi,
+			Url: journalUrl,
+		}
+
+		for _, node := range nodes {
+			currentNid, err := node.Nid.MarshalCSV()
+			if err != nil {
 				continue
 			}
-			journalDoiData := crossref.DoiData{
-				Doi: journalDoi,
-				Url: journalUrl,
+			currentNidInt, err := strconv.Atoi(currentNid)
+			if err != nil {
+				continue
 			}
+
+			// Check if this node is a direct child of the journal
+			isVolumeNode := false
+			if node.FieldMemberOf != nil {
+				for _, parent := range *node.FieldMemberOf {
+					if parent.TargetId == nid {
+						isVolumeNode = true
+						break
+					}
+				}
+			}
+
+			if !isVolumeNode {
+				continue
+			}
+
 			volume := crossref.JournalVolume{
 				JournalTitle:   journalTitle,
 				JournalDoiData: journalDoiData,
 			}
 
-			currentNid, err := node.Nid.MarshalCSV()
-			if err != nil {
-				slog.Error("Unable to get nid", "node", node)
-				os.Exit(1)
-			}
+			// Extract volume DOI
 			for _, id := range *node.FieldIdentifier {
-				if id.Attr0 != "doi" || id.Value == "" {
-					continue
-				}
-				volume.VolumeDoiData = crossref.DoiData{
-					Doi: id.Value,
-					Url: fmt.Sprintf("%s/node/%s", baseUrl, currentNid),
-				}
-			}
-			currentNidInt, err := strconv.Atoi(currentNid)
-			if err != nil {
-				slog.Error("Unable to convert nid to int", "err", err, "nid", currentNid)
-				os.Exit(1)
-			}
-
-			for _, child := range nodes {
-				isArticle := false
-				for _, parent := range *child.FieldMemberOf {
-					if parent.TargetId == currentNidInt {
-						isArticle = true
-					}
-				}
-				if !isArticle {
-					continue
-				}
-				first := true
-				var year int
-				for _, d := range *child.FieldEdtfDateIssued {
-					yearStr := strings.Split(d.Value, "-")[0]
-					year, err = strconv.Atoi(yearStr)
-					if err != nil {
-						slog.Error("Unable to convert year to int", "err", err)
-						os.Exit(1)
-					}
-					volume.Year = year
-				}
-				article := crossref.Article{
-					Title: html.EscapeString(child.FieldFullTitle.String()),
-					Year:  year,
-				}
-				rights := (*child.FieldRights)
-				if len(rights) > 0 && !strings.Contains(rights[0].String(), ".getty") {
-					article.LicenseRef = rights[0].String()
-				}
-				abstract := child.FieldAbstract.String()
-				if abstract != "" {
-					article.Abstract, err = crossref.StrToJATS(abstract)
-					if err != nil {
-						slog.Error("Unable to convert abstract to JATS", "err", err)
-						os.Exit(1)
-					}
-				}
-				for _, agent := range *child.FieldLinkedAgent {
-					if agent.RelType == "relators:cre" || agent.RelType == "relators:aut" {
-						article.Contributors = append(article.Contributors, crossref.GetContributor(agent.String(), first))
-						if first {
-							first = false
-						}
-					}
-				}
-				for _, id := range *child.FieldIdentifier {
-					if id.Attr0 != "doi" {
-						continue
-					}
-					article.DoiData = crossref.DoiData{
+				if id.Attr0 == "doi" && id.Value != "" {
+					volume.VolumeDoiData = crossref.DoiData{
 						Doi: id.Value,
 						Url: fmt.Sprintf("%s/node/%s", baseUrl, currentNid),
 					}
 					break
 				}
+			}
 
+			// Extract volume metadata (number, issue)
+			if node.FieldPartDetail != nil {
 				for _, detail := range *node.FieldPartDetail {
 					if detail.Type == "volume" {
 						volume.Number = detail.Number
@@ -163,8 +141,103 @@ var exportCrossref = &cobra.Command{
 						volume.Issue = detail.Number
 					}
 				}
+			}
+
+			// Third pass: find articles that belong to this volume
+			var volumeYear int
+			for _, childNode := range nodes {
+				childNidStr, err := childNode.Nid.MarshalCSV()
+				if err != nil {
+					continue
+				}
+				_, err = strconv.Atoi(childNidStr)
+				if err != nil {
+					continue
+				}
+
+				// Check if this child node belongs to the current volume
+				isArticleInVolume := false
+				if childNode.FieldMemberOf != nil {
+					for _, parent := range *childNode.FieldMemberOf {
+						if parent.TargetId == currentNidInt {
+							isArticleInVolume = true
+							break
+						}
+					}
+				}
+
+				if !isArticleInVolume {
+					continue
+				}
+
+				// Extract article metadata
+				article := crossref.Article{
+					Title: html.EscapeString(childNode.FieldFullTitle.String()),
+				}
+
+				// Extract year from article's date
+				if childNode.FieldEdtfDateIssued != nil {
+					for _, d := range *childNode.FieldEdtfDateIssued {
+						yearStr := strings.Split(d.Value, "-")[0]
+						year, err := strconv.Atoi(yearStr)
+						if err == nil {
+							article.Year = year
+							volumeYear = year
+						}
+						break
+					}
+				}
+
+				// Extract rights/license
+				if childNode.FieldRights != nil {
+					rights := (*childNode.FieldRights)
+					if len(rights) > 0 && !strings.Contains(rights[0].String(), ".getty") {
+						article.LicenseRef = rights[0].String()
+					}
+				}
+
+				// Extract abstract
+				abstract := childNode.FieldAbstract.String()
+				if abstract != "" {
+					article.Abstract, err = crossref.StrToJATS(abstract)
+					if err != nil {
+						slog.Error("Unable to convert abstract to JATS", "err", err)
+						os.Exit(1)
+					}
+				}
+
+				// Extract contributors
+				first := true
+				if childNode.FieldLinkedAgent != nil {
+					for _, agent := range *childNode.FieldLinkedAgent {
+						if agent.RelType == "relators:cre" || agent.RelType == "relators:aut" {
+							article.Contributors = append(article.Contributors, crossref.GetContributor(agent.String(), first))
+							if first {
+								first = false
+							}
+						}
+					}
+				}
+
+				// Extract article DOI and URL
+				if childNode.FieldIdentifier != nil {
+					for _, id := range *childNode.FieldIdentifier {
+						if id.Attr0 == "doi" && id.Value != "" {
+							article.DoiData = crossref.DoiData{
+								Doi: id.Value,
+								Url: fmt.Sprintf("%s/node/%s", baseUrl, childNidStr), // Use child's nid, not volume's
+							}
+							break
+						}
+					}
+				}
+
 				volume.Articles = append(volume.Articles, article)
 			}
+
+			// Set the volume year
+			volume.Year = volumeYear
+
 			volumes = append(volumes, volume)
 		}
 
@@ -180,6 +253,7 @@ var exportCrossref = &cobra.Command{
 			},
 			JournalVolume: volumes,
 		}
+
 		tmplFile := "crossref/journal-volume.xml.tmpl"
 		tmpl, err := template.ParseFiles(tmplFile)
 		if err != nil {
@@ -215,5 +289,4 @@ func init() {
 	exportCrossref.Flags().StringVar(&journalDoi, "journal-doi", "", "Journal's DOI")
 	exportCrossref.Flags().StringVar(&journalUrl, "journal-url", "", "Journal's URL")
 	exportCrossref.Flags().StringVar(&target, "target", "", "Where to save target file")
-
 }
