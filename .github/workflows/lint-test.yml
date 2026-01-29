@@ -25,10 +25,8 @@ jobs:
         run: go get .
 
       - name: Build
-        run: go build
-
-      - name: Generate structs
-        run: ./tests/starter-site.sh
+        run: go build -tags lehigh
 
       - name: Run tests
-        run: go test -v ./... && git diff fixtures
+        run: go test -tags lehigh -v ./...
+

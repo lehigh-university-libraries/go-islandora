@@ -9,6 +9,8 @@ builds:
       - linux
       - windows
       - darwin
+    tags:
+      - lehigh
 
 archives:
   - format: tar.gz
