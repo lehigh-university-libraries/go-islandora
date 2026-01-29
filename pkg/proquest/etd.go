@@ -125,14 +125,14 @@ func (submission DISSSubmission) EmbargoDate() string {
 	return embargoUntil
 }
 
-func computeEmbargoDate(embargoCode int, completionDate string) string {
+func computeEmbargoDate(embargoCode int, acceptDate string) string {
 	if embargoCode == 0 {
 		return ""
 	}
 
-	year, err := time.Parse("2006-01", completionDate)
+	year, err := time.Parse("01/02/2006", acceptDate)
 	if err != nil {
-		slog.Error("Invalid completion year format", "date", completionDate, "error", err)
+		slog.Error("Invalid completion year format", "date", acceptDate, "error", err)
 		return ""
 	}
 
