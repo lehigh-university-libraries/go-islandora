@@ -17,7 +17,7 @@ func TestEmbargoDate(t *testing.T) {
 				EmbargoCode: 0,
 				Description: DISSDescription{
 					Dates: DISSDates{
-						CompletionDate: "2021-05",
+						AcceptDate: "2021-05",
 					},
 				},
 				Repository: DISSRepository{
@@ -33,7 +33,7 @@ func TestEmbargoDate(t *testing.T) {
 				EmbargoCode: 0,
 				Description: DISSDescription{
 					Dates: DISSDates{
-						CompletionDate: "2021-05",
+						AcceptDate: "2021-05",
 					},
 				},
 				Repository: DISSRepository{
@@ -49,7 +49,7 @@ func TestEmbargoDate(t *testing.T) {
 				EmbargoCode: 1,
 				Description: DISSDescription{
 					Dates: DISSDates{
-						CompletionDate: "2021-05",
+						AcceptDate: "2021-05",
 					},
 				},
 				Repository: DISSRepository{
@@ -65,7 +65,7 @@ func TestEmbargoDate(t *testing.T) {
 				EmbargoCode: 2,
 				Description: DISSDescription{
 					Dates: DISSDates{
-						CompletionDate: "2021-05",
+						AcceptDate: "2021-05",
 					},
 				},
 				Repository: DISSRepository{
@@ -81,7 +81,7 @@ func TestEmbargoDate(t *testing.T) {
 				EmbargoCode: 3,
 				Description: DISSDescription{
 					Dates: DISSDates{
-						CompletionDate: "2021-05",
+						AcceptDate: "2021-05",
 					},
 				},
 				Repository: DISSRepository{
@@ -97,7 +97,7 @@ func TestEmbargoDate(t *testing.T) {
 				EmbargoCode: 2,
 				Description: DISSDescription{
 					Dates: DISSDates{
-						CompletionDate: "2021-05",
+						AcceptDate: "2021-05",
 					},
 				},
 				Repository: DISSRepository{
@@ -113,7 +113,7 @@ func TestEmbargoDate(t *testing.T) {
 				EmbargoCode: 1,
 				Description: DISSDescription{
 					Dates: DISSDates{
-						CompletionDate: "2021-05",
+						AcceptDate: "2021-05",
 					},
 				},
 				Repository: DISSRepository{
@@ -129,7 +129,7 @@ func TestEmbargoDate(t *testing.T) {
 				EmbargoCode: 1,
 				Description: DISSDescription{
 					Dates: DISSDates{
-						CompletionDate: "invalid-date",
+						AcceptDate: "invalid-date",
 					},
 				},
 				Repository: DISSRepository{
@@ -145,7 +145,7 @@ func TestEmbargoDate(t *testing.T) {
 				EmbargoCode: 1,
 				Description: DISSDescription{
 					Dates: DISSDates{
-						CompletionDate: "2021-05",
+						AcceptDate: "2021-05",
 					},
 				},
 				Repository: DISSRepository{
@@ -161,7 +161,7 @@ func TestEmbargoDate(t *testing.T) {
 				EmbargoCode: 99, // Unknown code
 				Description: DISSDescription{
 					Dates: DISSDates{
-						CompletionDate: "2021-05",
+						AcceptDate: "2021-05",
 					},
 				},
 				Repository: DISSRepository{
@@ -177,7 +177,7 @@ func TestEmbargoDate(t *testing.T) {
 				EmbargoCode: 2,
 				Description: DISSDescription{
 					Dates: DISSDates{
-						CompletionDate: "2020-12",
+						AcceptDate: "2020-12",
 					},
 				},
 				Repository: DISSRepository{
@@ -193,7 +193,7 @@ func TestEmbargoDate(t *testing.T) {
 				EmbargoCode: 1,
 				Description: DISSDescription{
 					Dates: DISSDates{
-						CompletionDate: "",
+						AcceptDate: "",
 					},
 				},
 				Repository: DISSRepository{

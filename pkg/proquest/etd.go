@@ -98,6 +98,7 @@ type DISSCategory struct {
 }
 
 type DISSDates struct {
+	AcceptDate     string `xml:"DISS_accept_date"`
 	CompletionDate string `xml:"DISS_comp_date"`
 }
 
@@ -118,7 +119,7 @@ type DISSBinary struct {
 func (submission DISSSubmission) EmbargoDate() string {
 	embargoUntil := extractEmbargoDate(submission.Repository)
 	if embargoUntil == "" {
-		embargoUntil = computeEmbargoDate(submission.EmbargoCode, submission.Description.Dates.CompletionDate)
+		embargoUntil = computeEmbargoDate(submission.EmbargoCode, submission.Description.Dates.AcceptDate)
 	}
 
 	return embargoUntil

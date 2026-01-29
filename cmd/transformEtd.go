@@ -162,9 +162,9 @@ func processZip(uploadId int, zipPath string, writer *csv.Writer) error {
 		subjects = append(subjects, category.Description)
 	}
 
-	year, err := time.Parse("2006-01", submission.Description.Dates.CompletionDate)
+	year, err := time.Parse("2006-01", submission.Description.Dates.AcceptDate)
 	if err != nil {
-		slog.Error("Invalid completion year format", "date", submission.Description.Dates.CompletionDate, "error", err)
+		slog.Error("Invalid completion year format", "date", submission.Description.Dates.AcceptDate, "error", err)
 		return err
 	}
 	title := submission.Description.Title
