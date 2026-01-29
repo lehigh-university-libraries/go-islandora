@@ -1,3 +1,5 @@
+//go:build lehigh
+
 package cmd
 
 import (
