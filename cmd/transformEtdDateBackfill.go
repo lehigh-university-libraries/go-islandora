@@ -33,7 +33,11 @@ The CSV should have columns: title, nid, field_edtf_date_issued_value, field_edt
 func init() {
 	transformCmd.AddCommand(transformEtdDateBackfillCmd)
 	transformEtdDateBackfillCmd.Flags().StringVar(&etdCsvFile, "csv", "", "CSV export file with title, nid, field_edtf_date_issued_value, field_edtf_date_embargo_value columns")
-	transformEtdDateBackfillCmd.MarkFlagRequired("csv")
+	err := transformEtdDateBackfillCmd.MarkFlagRequired("csv")
+	if err != nil {
+		slog.Error("Unable to mark csv flag as required for etd-date-backfill command")
+		os.Exit(1)
+	}
 }
 
 // etdRecord represents a row from the CSV export
