@@ -196,7 +196,10 @@ func processZipForDateCheck(zipPath string, records map[string]etdRecord) error 
 	}
 
 	title := strings.TrimSpace(submission.Description.Title)
-	acceptDate := strings.Split(submission.Description.Dates.AcceptDate, "/")[2]
+	// field_edtf_date_issued_value comes from DISS_comp_date (extract just the year)
+	completionDate := submission.Description.Dates.CompletionDate
+	completionYear := strings.Split(completionDate, "-")[0]
+	// embargo is calculated from DISS_accept_date
 	embargoDate := submission.EmbargoDate()
 
 	// Look up by full title first, then truncated title
@@ -211,10 +214,10 @@ func processZipForDateCheck(zipPath string, records map[string]etdRecord) error 
 	}
 
 	// Check if dates match
-	// The acceptDate from XML is in YYYY-MM format
+	// The completionYear is just the year from DISS_comp_date
 	// The field_edtf_date_issued_value should match
-	if record.fieldEdtfDateIssuedValue != acceptDate || record.fieldEdtfDateEmbargoValue != embargoDate {
-		fmt.Printf("%s\t%s\t%s\n", record.nid, acceptDate, embargoDate)
+	if record.fieldEdtfDateIssuedValue != completionYear || record.fieldEdtfDateEmbargoValue != embargoDate {
+		fmt.Printf("%s\t%s\t%s\n", record.nid, completionYear, embargoDate)
 	}
 
 	return nil
