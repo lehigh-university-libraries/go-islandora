@@ -9,7 +9,7 @@ require (
 	github.com/oapi-codegen/oapi-codegen/v2 v2.5.1
 	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/net v0.54.0
+	golang.org/x/net v0.55.0
 	google.golang.org/api v0.264.0
 	gopkg.in/yaml.v2 v2.4.0
 )
