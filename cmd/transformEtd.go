@@ -162,7 +162,7 @@ func processZip(uploadId int, zipPath string, writer *csv.Writer) error {
 		subjects = append(subjects, category.Description)
 	}
 
-	year, err := time.Parse("2006-01", submission.Description.Dates.CompletionDate)
+	completionYear, err := parseCompletionYear(submission.Description.Dates.CompletionDate)
 	if err != nil {
 		slog.Error("Invalid completion year format", "date", submission.Description.Dates.CompletionDate, "error", err)
 		return err
@@ -197,7 +197,7 @@ func processZip(uploadId int, zipPath string, writer *csv.Writer) error {
 		submission.Description.Institution.Department,
 		"Text",
 		genre,
-		year.Format("2006"),
+		completionYear,
 		submission.EmbargoDate(),
 		language,
 		"application/pdf",
@@ -216,6 +216,27 @@ func processZip(uploadId int, zipPath string, writer *csv.Writer) error {
 	writer.Flush()
 
 	return nil
+}
+
+func parseCompletionYear(completionDate string) (string, error) {
+	completionDate = strings.TrimSpace(completionDate)
+	if completionDate == "" {
+		return "", fmt.Errorf("empty completion date")
+	}
+
+	if len(completionDate) == 4 {
+		if _, err := strconv.Atoi(completionDate); err != nil {
+			return "", err
+		}
+		return completionDate, nil
+	}
+
+	year, err := time.Parse("2006-01", completionDate)
+	if err != nil {
+		return "", err
+	}
+
+	return year.Format("2006"), nil
 }
 
 func getContributors(submission proquest.DISSSubmission) string {
