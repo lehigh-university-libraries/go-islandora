@@ -4,3 +4,4 @@ output.json
 go-islandora
 islandora-starter-site
 *.xml
+!cmd/testdata/*.xml

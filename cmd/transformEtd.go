@@ -24,7 +24,7 @@ import (
 var transformEtdCmd = &cobra.Command{
 	Use:   "etd",
 	Short: "Transform a directory of ProQuest ETD ZIPs to another format",
-	Run:   transformETDs,
+	RunE:  transformETDs,
 }
 
 func init() {
@@ -32,22 +32,19 @@ func init() {
 }
 
 // transformETDs reads ZIP files from "etds" directory, extracts XML, and writes a CSV
-func transformETDs(cmd *cobra.Command, args []string) {
+func transformETDs(cmd *cobra.Command, args []string) error {
 	isDir, err := isDirectory(source)
 	if !isDir || err != nil {
-		slog.Error("Source flag is not a directory", "source", source)
-		os.Exit(1)
+		return fmt.Errorf("source flag is not a directory: %s", source)
 	}
 
 	if target == "" {
-		slog.Error("Target flag is required")
-		os.Exit(1)
+		return fmt.Errorf("target flag is required")
 	}
 
 	outFile, err := os.Create(target)
 	if err != nil {
-		slog.Error("Failed to create output file", "error", err)
-		return
+		return fmt.Errorf("failed to create output file: %w", err)
 	}
 	defer outFile.Close()
 
@@ -80,24 +77,23 @@ func transformETDs(cmd *cobra.Command, args []string) {
 		"Keyword",
 		"Rights Statement",
 		"Supplemental File",
+		"Local Restriction",
 	}
 
 	if err := writer.Write(header); err != nil {
-		slog.Error("Failed to write CSV header", "error", err)
-		return
+		return fmt.Errorf("failed to write CSV header: %w", err)
 	}
 
 	// Iterate over ZIP files
 	uploadId := 1
 	err = filepath.Walk(source, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			slog.Error("Error accessing file", "file", path, "error", err)
-			return nil
+			return err
 		}
 		if strings.HasSuffix(info.Name(), ".zip") {
 			slog.Info("Processing ZIP file", "file", path)
 			if err := processZip(uploadId, path, writer); err != nil {
-				slog.Error("Failed to process ZIP", "file", path, "error", err)
+				return fmt.Errorf("failed to process ZIP %s: %w", path, err)
 			}
 			uploadId += 1
 		}
@@ -105,8 +101,10 @@ func transformETDs(cmd *cobra.Command, args []string) {
 	})
 
 	if err != nil {
-		slog.Error("Failed to walk directory", "error", err)
+		return err
 	}
+	writer.Flush()
+	return writer.Error()
 }
 
 // processZip extracts XML from a ZIP, finds the relevant data, and writes to CSV
@@ -147,6 +145,10 @@ func processZip(uploadId int, zipPath string, writer *csv.Writer) error {
 	var submission proquest.DISSSubmission
 	if err := decoder.Decode(&submission); err != nil {
 		return fmt.Errorf("failed to decode XML: %w", err)
+	}
+	embargoDate, err := submission.EmbargoDate()
+	if err != nil {
+		return err
 	}
 
 	// Format keywords
@@ -198,7 +200,7 @@ func processZip(uploadId int, zipPath string, writer *csv.Writer) error {
 		"Text",
 		genre,
 		completionYear,
-		submission.EmbargoDate(),
+		embargoDate,
 		language,
 		"application/pdf",
 		"born digital",
@@ -207,6 +209,7 @@ func processZip(uploadId int, zipPath string, writer *csv.Writer) error {
 		strings.Join(keywords, " ; "),
 		"IN COPYRIGHT",
 		strings.Join(supplementaryFiles, " ; "),
+		strconv.FormatBool(submission.Repository.LocalRestriction()),
 	}
 
 	// Write row to CSV
