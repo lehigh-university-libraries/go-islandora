@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<DISS_submission publishing_option="0" embargo_code="4" third_party_search="Y">
+  <DISS_authorship>
+    <DISS_author type="primary">
+      <DISS_name><DISS_surname>Brooks</DISS_surname><DISS_fname>Olivia</DISS_fname><DISS_middle/><DISS_suffix/></DISS_name>
+    </DISS_author>
+  </DISS_authorship>
+  <DISS_description page_count="" type="masters" external_id="http://dissertations.umi.com/lehigh:12752" apply_for_copyright="no">
+    <DISS_title>Toward Cultural Bridges and Toppled Hierarchy: Geography and Racial Economy in Gloria Naylor&#8217;s Sapphira Wade</DISS_title>
+    <DISS_dates><DISS_comp_date>2023-05</DISS_comp_date><DISS_accept_date>01/01/2023</DISS_accept_date></DISS_dates>
+    <DISS_degree>M.A.</DISS_degree>
+    <DISS_institution><DISS_inst_name>Lehigh University</DISS_inst_name><DISS_inst_contact>English</DISS_inst_contact></DISS_institution>
+    <DISS_categorization><DISS_keyword/><DISS_language>en</DISS_language></DISS_categorization>
+  </DISS_description>
+  <DISS_content>
+    <DISS_abstract><DISS_para>Naylor&#8217;s manuscript features S&#225;mi Indigenous groups.</DISS_para></DISS_abstract>
+    <DISS_binary type="PDF">Brooks_lehigh_0105N_12752.pdf</DISS_binary>
+  </DISS_content>
+  <DISS_restriction><DISS_sales_restriction code="1" remove=""/></DISS_restriction>
+  <DISS_repository>
+    <DISS_version>2016-02-15 13:44:09</DISS_version>
+    <DISS_agreement_decision_date>2023-05-03 10:11:06</DISS_agreement_decision_date>
+    <DISS_acceptance>1</DISS_acceptance>
+    <DISS_delayed_release>Never deliver</DISS_delayed_release>
+    <DISS_access_option/>
+  </DISS_repository>
+  <DISS_creative_commons_license><DISS_abbreviation/></DISS_creative_commons_license>
+</DISS_submission>
