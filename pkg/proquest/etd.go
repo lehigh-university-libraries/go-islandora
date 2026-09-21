@@ -3,24 +3,17 @@ package proquest
 import (
 	"encoding/xml"
 	"fmt"
-	"log/slog"
 	"strings"
 	"time"
 )
 
 type DISSSubmission struct {
-	XMLName          xml.Name             `xml:"DISS_submission"`
-	EmbargoCode      int                  `xml:"embargo_code,attr"`
-	Authorship       DISSEAuthorship      `xml:"DISS_authorship"`
-	Description      DISSDescription      `xml:"DISS_description"`
-	Repository       DISSRepository       `xml:"DISS_repository"`
-	SalesRestriction DISSSalesRestriction `xml:"DISS_restriction>DISS_sales_restriction"`
-	Content          DISSContent          `xml:"DISS_content"`
-}
-
-// DISSSalesRestriction contains the ProQuest embargo removal date.
-type DISSSalesRestriction struct {
-	Remove string `xml:"remove,attr"`
+	XMLName     xml.Name        `xml:"DISS_submission"`
+	EmbargoCode int             `xml:"embargo_code,attr"`
+	Authorship  DISSEAuthorship `xml:"DISS_authorship"`
+	Description DISSDescription `xml:"DISS_description"`
+	Repository  DISSRepository  `xml:"DISS_repository"`
+	Content     DISSContent     `xml:"DISS_content"`
 }
 
 type DISSRepository struct {
@@ -127,8 +120,8 @@ type DISSBinary struct {
 	FileName string `xml:",chardata"`
 }
 
-// EmbargoDate returns the later of the repository and ProQuest embargo dates.
-// Access options do not clear embargoes; an indefinite restriction takes precedence.
+// EmbargoDate returns the repository's DISS_delayed_release date.
+// ProQuest sales restrictions and embargo durations do not apply to the repository.
 func (submission DISSSubmission) EmbargoDate() (string, error) {
 	if submission.EmbargoCode < 0 || submission.EmbargoCode > 4 {
 		return "", fmt.Errorf("invalid embargo code %d: expected 0-4", submission.EmbargoCode)
@@ -140,46 +133,18 @@ func (submission DISSSubmission) EmbargoDate() (string, error) {
 		return "", fmt.Errorf("DISS_access_option %q cannot be represented by an embargo date", submission.Repository.AccessOption)
 	}
 
-	var repositoryDate string
-	if embargo := strings.TrimSpace(submission.Repository.Embargo); embargo != "" {
-		if strings.EqualFold(embargo, "never deliver") {
-			// Preserve Lehigh's existing convention for an indefinite repository embargo.
-			return "2999-12-31", nil
-		}
-		for _, layout := range []string{"2006-01-02", "2006-01-02 15:04:05"} {
-			if date, err := time.Parse(layout, embargo); err == nil {
-				repositoryDate = date.Format("2006-01-02")
-				break
-			}
-		}
-		if repositoryDate == "" {
-			return "", fmt.Errorf("cannot determine repository embargo date from DISS_delayed_release %q", embargo)
+	embargo := strings.TrimSpace(submission.Repository.Embargo)
+	if embargo == "" {
+		return "", nil
+	}
+	if strings.EqualFold(embargo, "never deliver") {
+		// Preserve Lehigh's existing convention for an indefinite repository embargo.
+		return "2999-12-31", nil
+	}
+	for _, layout := range []string{"2006-01-02", "2006-01-02 15:04:05"} {
+		if date, err := time.Parse(layout, embargo); err == nil {
+			return date.Format("2006-01-02"), nil
 		}
 	}
-
-	releaseDate, err := time.Parse("01/02/2006", submission.SalesRestriction.Remove)
-	if err == nil {
-		return max(repositoryDate, releaseDate.Format("2006-01-02")), nil
-	}
-
-	if submission.EmbargoCode == 0 || submission.EmbargoCode == 4 {
-		return repositoryDate, nil
-	}
-
-	acceptDate, err := time.Parse("01/02/2006", submission.Description.Dates.AcceptDate)
-	if err != nil {
-		slog.Error("Invalid acceptance date format", "date", submission.Description.Dates.AcceptDate, "error", err)
-		return repositoryDate, nil
-	}
-
-	switch submission.EmbargoCode {
-	case 1:
-		releaseDate = acceptDate.AddDate(0, 6, 0)
-	case 2:
-		releaseDate = acceptDate.AddDate(1, 0, 0)
-	case 3:
-		releaseDate = acceptDate.AddDate(2, 0, 0)
-	}
-
-	return max(repositoryDate, releaseDate.Format("2006-01-02")), nil
+	return "", fmt.Errorf("cannot determine repository embargo date from DISS_delayed_release %q", embargo)
 }

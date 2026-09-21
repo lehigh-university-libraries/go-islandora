@@ -151,7 +151,7 @@ func TestETDCampusRestrictionOutputs(t *testing.T) {
 	for i, name := range rows[0] {
 		fields[name] = rows[1][i]
 	}
-	if fields["Local Restriction"] != "true" || fields["Embargo Until Date"] != "2027-08-26" {
+	if fields["Local Restriction"] != "true" || fields["Embargo Until Date"] != "" {
 		t.Fatalf("incorrect campus restrictions: %v", fields)
 	}
 	if _, exists := fields["Identifier"]; exists {
@@ -160,18 +160,19 @@ func TestETDCampusRestrictionOutputs(t *testing.T) {
 
 	command := &cobra.Command{}
 	for _, tt := range []struct {
-		title, existing string
-		wantUpdate      bool
+		title, existing, embargo string
+		wantUpdate               bool
 	}{
-		{"Campus thesis", "false", true},
-		{"Campus thesis", "true", false},
-		{"Changed title", "false", false},
+		{"Campus thesis", "false", "", true},
+		{"Campus thesis", "true", "", false},
+		{"Campus thesis", "true", "2027-08-26", true},
+		{"Changed title", "false", "", false},
 	} {
 		var input bytes.Buffer
 		writer := csv.NewWriter(&input)
 		if err := writer.WriteAll([][]string{
 			{"title", "nid", "field_edtf_date_issued_value", "field_edtf_date_embargo_value", "field_local_restriction"},
-			{tt.title, "42", "2026", "2027-08-26", tt.existing},
+			{tt.title, "42", "2026", tt.embargo, tt.existing},
 		}); err != nil {
 			t.Fatal(err)
 		}
@@ -185,7 +186,7 @@ func TestETDCampusRestrictionOutputs(t *testing.T) {
 		}
 		want := "nid\tfield_edtf_date_issued_value\tfield_edtf_date_embargo_value\tfield_local_restriction\n"
 		if tt.wantUpdate {
-			want += "42\t2026\t2027-08-26\ttrue\n"
+			want += "42\t2026\t\ttrue\n"
 		}
 		if out.String() != want {
 			t.Errorf("backfill for %+v = %q, want %q", tt, out.String(), want)
