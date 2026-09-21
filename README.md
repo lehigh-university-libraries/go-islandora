@@ -50,18 +50,31 @@ today, past dates, and empty dates, including campus-only records without a date
 go-islandora transform etd-embargo --source /path/to/xml --future-only --target embargoes.csv
 ```
 
-The embargo date is the later of the repository delayed-release date and the
-ProQuest sales embargo date. This is our local rule for combining the two
-independent restrictions. Open-access and campus-only options do not clear either
-embargo. Campus-only access additionally sets `field_local_restriction=true`.
-`never deliver` takes precedence over dated embargoes and uses the existing indefinite
-embargo date `2999-12-31`. Unknown access options or unresolvable repository
-restrictions (including periods without an explicit end date) cause an error.
+The Preserve embargo date comes only from `DISS_repository/DISS_delayed_release`.
+Dates and timestamps are accepted; `never deliver` uses the existing indefinite
+embargo date `2999-12-31`. An absent or empty value means no IR embargo date.
+`DISS_sales_restriction/@remove` and durations implied by ProQuest embargo codes
+do not set or extend the Preserve embargo, even when the ProQuest date is later.
+Codes outside 0–4 still cause an error.
 
-The ProQuest date comes from a valid sales restriction `remove` date, or otherwise
-from adding six calendar months, one year, or two years to the acceptance date for
-codes 1–3. Codes outside 0–4 cause an error. Codes 0 and 4 without a valid sales
-release date contribute no date; a valid repository date is still retained.
+Open-access and campus-only options do not clear an explicit IR embargo.
+Campus-only access additionally sets `field_local_restriction=true`. Unknown
+access options or unresolvable repository restrictions (including periods without
+an explicit end date) cause an error.
+
+This separation follows [ProQuest's embargo guidance](https://pq-static-content.proquest.com/collateral/media2/documents/umi_embargoesrestrictions_guide.pdf):
+IR dissemination policies are managed independently by the university.
+[Ex Libris's ETD Administrator mapping](https://knowledge.exlibrisgroup.com/Esploro/Product_Documentation/Esploro_Online_Help_%28English%29/Esploro_Integration/ETD_Administrator_Mapping_to_Esploro_Asset/ETD_Administrator_Mapping_to_Esploro_Assets)
+also identifies `DISS_delayed_release` as the IR embargo value. Its Esploro-specific
+mapping ignores that value when access is explicitly open or campus-only; Preserve
+instead retains an explicit IR embargo as a local precaution. The `2999-12-31`
+sentinel and rejection of periods without a date are also local implementation
+choices, not ProQuest requirements.
+
+The separate IR PDF embargo form is not represented in the delivered XML. College
+coordinators must reconcile that form with the student's IR selection in the ETD
+system. An XML-only audit cannot detect a discrepancy between the form and the
+system; audits must also compare the approved IR forms with those settings.
 
 The ETD ZIP ingest also includes `Local Restriction` (mapped to
 `field_local_restriction`). The date-backfill command compares and emits

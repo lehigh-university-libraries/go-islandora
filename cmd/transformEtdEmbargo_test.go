@@ -136,8 +136,8 @@ func TestExtractETDEmbargoes(t *testing.T) {
 	}
 	want := [][]string{
 		{"file", "field_edtf_date_embargo", "field_local_restriction", "pdf_file"},
-		{filepath.Join(source, "campus.xml"), "2027-08-26", "true", ""},
-		{filepath.Join(source, "nested/release.XML"), "2027-08-26", "false", "Amin_lehigh_0105A_13188.pdf"},
+		{filepath.Join(source, "campus.xml"), "", "true", ""},
+		{filepath.Join(source, "nested/release.XML"), "2027-01-01", "false", "Amin_lehigh_0105A_13188.pdf"},
 		{filepath.Join(source, "repository.xml"), "2999-12-31", "false", ""},
 	}
 	if !reflect.DeepEqual(got, want) {
@@ -170,7 +170,8 @@ func TestExtractETDEmbargoesFutureOnly(t *testing.T) {
 		"indefinite": "NEVER DELIVER",
 		"none":       "",
 	} {
-		input := fmt.Sprintf(`<DISS_submission embargo_code="0"><DISS_repository><DISS_delayed_release>%s</DISS_delayed_release></DISS_repository></DISS_submission>`, date)
+		// A future ProQuest sales date must not affect the IR future-only filter.
+		input := fmt.Sprintf(`<DISS_submission embargo_code="4"><DISS_restriction><DISS_sales_restriction remove="%s"/></DISS_restriction><DISS_repository><DISS_delayed_release>%s</DISS_delayed_release></DISS_repository></DISS_submission>`, now.AddDate(1, 0, 0).Format("01/02/2006"), date)
 		if err := os.WriteFile(filepath.Join(source, name+".xml"), []byte(input), 0600); err != nil {
 			t.Fatal(err)
 		}
